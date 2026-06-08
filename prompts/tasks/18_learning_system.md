@@ -113,3 +113,7 @@
 - [ ] Certificate auto-generated on completion
 - [ ] Certificate PDF downloadable
 - [ ] Public verification page working
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

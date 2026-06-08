@@ -86,3 +86,7 @@ Read these before starting:
 - [x] User document auto-created on signup
 - [x] Custom Claims Cloud Function deployed
 - [x] Duplicate email handled securely
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

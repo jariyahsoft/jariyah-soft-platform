@@ -160,3 +160,7 @@
 - [ ] Firebase multi-project configured
 - [ ] Post-deploy health check
 - [ ] Rollback procedure documented
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

@@ -96,3 +96,7 @@ Read these before starting:
 - [ ] CI pipeline configured
 - [ ] Coverage ≥ 70%
 - [ ] All tests pass green
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

@@ -67,3 +67,7 @@
 - [ ] Pending → approved workflow
 - [ ] Aggregate rating calculated correctly
 - [ ] Reviews listed on software detail
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

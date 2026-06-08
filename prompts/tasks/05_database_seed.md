@@ -93,3 +93,7 @@ Read these before starting:
 - [x] `--dry-run` flag supported
 - [x] Data visible in Firestore Emulator UI
 
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

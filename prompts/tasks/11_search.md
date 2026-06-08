@@ -90,3 +90,7 @@ Read these before starting:
 - [ ] Full search results page with facets
 - [ ] Fallback when search unavailable
 - [ ] Private data never in search index
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

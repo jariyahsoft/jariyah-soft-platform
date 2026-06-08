@@ -96,3 +96,7 @@ Read these before starting:
 - [ ] Standard error response format
 - [ ] Rate limiting functional
 - [ ] Idempotency-Key supported on mutations
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

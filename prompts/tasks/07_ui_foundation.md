@@ -85,3 +85,7 @@ Read these before starting:
 - [ ] Loading/empty/error states created
 - [ ] Accessibility checklist passed
 - [ ] All text from i18n translation files
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

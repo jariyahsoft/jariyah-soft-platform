@@ -83,3 +83,7 @@ Read these before starting:
 - [ ] Cover image upload
 - [ ] All UI states handled
 - [ ] SEO metadata present
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

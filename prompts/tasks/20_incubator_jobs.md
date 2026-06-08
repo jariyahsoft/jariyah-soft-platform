@@ -104,3 +104,7 @@
 - [ ] URL validation (HTTPS + allowlist)
 - [ ] Suspended project → 60s search removal
 - [ ] All pages responsive + i18n
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

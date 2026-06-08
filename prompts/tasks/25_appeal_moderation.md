@@ -78,3 +78,7 @@
 - [ ] Takedown affects search ≤ 60 seconds
 - [ ] Download link health monitoring
 - [ ] Full audit trail
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

@@ -77,3 +77,7 @@ Read these before starting:
 - [x] ESLint + Prettier configured and passing
 - [x] `.env.example` created
 
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

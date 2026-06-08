@@ -92,3 +92,7 @@
 - [ ] Developer dashboard with stats
 - [ ] GitHub integration (basic)
 - [ ] SEO metadata present
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

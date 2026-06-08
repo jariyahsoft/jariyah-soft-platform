@@ -75,3 +75,7 @@ Read these before starting:
 - [ ] SEO metadata complete
 - [ ] Core Web Vitals: LCP < 2.5s, CLS < 0.1
 - [ ] Mobile responsive
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

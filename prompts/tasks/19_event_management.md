@@ -108,3 +108,7 @@
 - [ ] 24h reminder notifications
 - [ ] Event creation form for organizers
 - [ ] Attendee management + CSV export
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

@@ -92,3 +92,7 @@ Read these before starting:
 - [ ] All UI states handled
 - [ ] Responsive on all breakpoints
 - [ ] SEO metadata present
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*

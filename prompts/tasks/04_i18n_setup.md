@@ -108,3 +108,7 @@ Read these before starting:
 - [x] SEO tags (hreflang, og:locale) present
 - [x] No hardcoded text in components
 
+
+
+---
+*Note: You can start a new conversation for the next task to save Context window limits.*
