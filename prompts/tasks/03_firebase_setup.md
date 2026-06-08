@@ -78,9 +78,10 @@ Read these before starting:
    - App connects to emulators in dev mode
 
 ## Definition of Done
-- [ ] Firebase config at `src/lib/firebase/config.ts` working
-- [ ] `firestore.rules` deployed with full rules baseline
-- [ ] `storage.rules` deployed with full rules baseline
-- [ ] Emulators start without errors
-- [ ] `firestore.indexes.json` has all composite indexes
-- [ ] Auth providers configured in Firebase Console
+- [x] Firebase config at `src/lib/firebase/config.ts` working
+- [x] `firestore.rules` deployed with full rules baseline
+- [x] `storage.rules` deployed with full rules baseline
+- [x] Emulators start without errors
+- [x] `firestore.indexes.json` has all composite indexes
+- [x] Auth providers configured in Firebase Console
+

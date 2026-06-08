@@ -1,0 +1,44 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function isAdmin() { return signedIn() && request.auth.token.role == 'admin'; }
+    function isValidImage() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp|gif)')
+             && request.resource.size < 10 * 1024 * 1024;
+    }
+    function isValidLogo() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp)')
+             && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    match /users/{uid}/{filename} {
+      allow read: if true;
+      allow write: if isOwner(uid) && isValidImage() && filename.matches('avatar\\.[a-zA-Z0-9]+');
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+    match /software/{softwareId}/{filename} {
+      allow read: if true;
+      allow write: if signedIn() && request.auth.token.role in ['developer', 'admin'] && isValidLogo() && filename.matches('logo\\.[a-zA-Z0-9]+');
+      allow delete: if isAdmin();
+    }
+    match /software/{softwareId}/screenshots/{filename} {
+      allow read: if true;
+      allow write: if signedIn() && request.auth.token.role in ['developer', 'admin'] && isValidImage();
+      allow delete: if isAdmin();
+    }
+    match /articles/{articleId}/{path=**} {
+      allow read: if true;
+      allow write: if signedIn() && request.auth.token.role in ['developer', 'admin'] && isValidImage();
+      allow delete: if isAdmin();
+    }
+    match /certificates/{filename} {
+      allow read: if signedIn() && filename.matches('.*\\.pdf');
+      allow write: if false; // Cloud Functions only
+    }
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

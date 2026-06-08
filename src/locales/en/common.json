@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "Home",
+    "software": "Software",
+    "knowledge": "Knowledge",
+    "developers": "Developers",
+    "events": "Events",
+    "learn": "Learn",
+    "jobs": "Jobs",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "search": "Search...",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "logout": "Log Out"
+  },
+  "actions": {
+    "download": "Download",
+    "submit": "Submit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "retry": "Try Again",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "share": "Share",
+    "report": "Report",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "viewAll": "View All"
+  },
+  "states": {
+    "loading": "Loading...",
+    "empty": "No data found",
+    "offline": "You are currently offline",
+    "error": "An error occurred",
+    "success": "Success",
+    "noResults": "No results found",
+    "endOfList": "All items have been loaded"
+  },
+  "meta": {
+    "siteName": "JariyahSoft",
+    "tagline": "Thai Software Platform"
+  },
+  "auth": {
+    "loginTitle": "Log In",
+    "signupTitle": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "orContinueWith": "Or continue with",
+    "agreeToTerms": "I agree to the {terms} and {privacy}",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}"
+  }
+}

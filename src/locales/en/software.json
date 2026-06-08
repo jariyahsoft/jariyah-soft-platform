@@ -1,0 +1,55 @@
+{
+  "title": "Thai Software",
+  "subtitle": "Discover quality software from Thai developers",
+  "categories": "Categories",
+  "allCategories": "All Categories",
+  "featured": "Featured",
+  "trending": "Trending",
+  "newest": "Newest",
+  "topRated": "Top Rated",
+  "freeOnly": "Free Only",
+  "card": {
+    "downloads": "{count} downloads",
+    "rating": "Rating {rating}",
+    "reviews": "{count} reviews",
+    "version": "Version {version}",
+    "free": "Free",
+    "paid": "Paid",
+    "openSource": "Open Source",
+    "lastUpdated": "Updated {date}"
+  },
+  "detail": {
+    "overview": "Overview",
+    "screenshots": "Screenshots",
+    "reviews": "Reviews",
+    "versions": "Versions",
+    "developer": "Developer",
+    "requirements": "System Requirements",
+    "license": "License",
+    "downloadNow": "Download Now",
+    "visitWebsite": "Visit Website",
+    "reportIssue": "Report Issue"
+  },
+  "submit": {
+    "title": "Submit Software",
+    "name": "Software Name",
+    "description": "Description",
+    "category": "Category",
+    "tags": "Tags",
+    "website": "Website",
+    "license": "License",
+    "screenshots": "Screenshots",
+    "icon": "Icon",
+    "submitForReview": "Submit for Review"
+  },
+  "status": {
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "under_review": "Under Review",
+    "approved": "Approved",
+    "published": "Published",
+    "rejected": "Rejected",
+    "archived": "Archived",
+    "suspended": "Suspended"
+  }
+}

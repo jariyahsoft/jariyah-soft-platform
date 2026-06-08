@@ -87,8 +87,9 @@ Read these before starting:
 11. **Verify**: Run seed on emulator and check data in Emulator UI
 
 ## Definition of Done
-- [ ] Seed script idempotent (safe to run multiple times)
-- [ ] All categories, licenses, badges, settings seeded
-- [ ] Bootstrap admin script working
-- [ ] `--dry-run` flag supported
-- [ ] Data visible in Firestore Emulator UI
+- [x] Seed script idempotent (safe to run multiple times)
+- [x] All categories, licenses, badges, settings seeded
+- [x] Bootstrap admin script working
+- [x] `--dry-run` flag supported
+- [x] Data visible in Firestore Emulator UI
+

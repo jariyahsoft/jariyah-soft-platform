@@ -1,0 +1,43 @@
+{
+  "title": "องค์ความรู้",
+  "subtitle": "บทความและความรู้จากชุมชนนักพัฒนาไทย",
+  "allCategories": "ทุกหมวดหมู่",
+  "featured": "แนะนำ",
+  "trending": "มาแรง",
+  "newest": "ล่าสุด",
+  "readTime": "{minutes} นาที",
+  "card": {
+    "readMore": "อ่านต่อ",
+    "views": "{count} ครั้ง",
+    "likes": "{count} ถูกใจ",
+    "comments": "{count} ความคิดเห็น",
+    "publishedAt": "เผยแพร่เมื่อ {date}",
+    "author": "โดย {name}"
+  },
+  "detail": {
+    "tableOfContents": "สารบัญ",
+    "relatedArticles": "บทความที่เกี่ยวข้อง",
+    "tags": "แท็ก",
+    "shareArticle": "แชร์บทความ",
+    "likeArticle": "ถูกใจ",
+    "addComment": "เพิ่มความคิดเห็น"
+  },
+  "submit": {
+    "title": "เขียนบทความ",
+    "articleTitle": "ชื่อบทความ",
+    "content": "เนื้อหา",
+    "category": "หมวดหมู่",
+    "tags": "แท็ก",
+    "coverImage": "ภาพปก",
+    "submitForReview": "ส่งเพื่อตรวจสอบ",
+    "saveDraft": "บันทึกร่าง"
+  },
+  "status": {
+    "draft": "ร่าง",
+    "submitted": "ส่งแล้ว",
+    "under_review": "กำลังตรวจสอบ",
+    "approved": "อนุมัติแล้ว",
+    "published": "เผยแพร่แล้ว",
+    "rejected": "ถูกปฏิเสธ"
+  }
+}

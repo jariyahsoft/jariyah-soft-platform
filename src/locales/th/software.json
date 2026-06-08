@@ -1,0 +1,55 @@
+{
+  "title": "ซอฟต์แวร์ไทย",
+  "subtitle": "ค้นพบซอฟต์แวร์คุณภาพจากนักพัฒนาไทย",
+  "categories": "หมวดหมู่",
+  "allCategories": "ทุกหมวดหมู่",
+  "featured": "แนะนำ",
+  "trending": "มาแรง",
+  "newest": "ล่าสุด",
+  "topRated": "คะแนนสูงสุด",
+  "freeOnly": "ฟรีเท่านั้น",
+  "card": {
+    "downloads": "{count} ดาวน์โหลด",
+    "rating": "คะแนน {rating}",
+    "reviews": "{count} รีวิว",
+    "version": "เวอร์ชัน {version}",
+    "free": "ฟรี",
+    "paid": "มีค่าใช้จ่าย",
+    "openSource": "โอเพนซอร์ส",
+    "lastUpdated": "อัปเดตล่าสุด {date}"
+  },
+  "detail": {
+    "overview": "ภาพรวม",
+    "screenshots": "ภาพหน้าจอ",
+    "reviews": "รีวิว",
+    "versions": "เวอร์ชัน",
+    "developer": "นักพัฒนา",
+    "requirements": "ความต้องการของระบบ",
+    "license": "สัญญาอนุญาต",
+    "downloadNow": "ดาวน์โหลดเดี๋ยวนี้",
+    "visitWebsite": "เยี่ยมชมเว็บไซต์",
+    "reportIssue": "รายงานปัญหา"
+  },
+  "submit": {
+    "title": "ส่งซอฟต์แวร์",
+    "name": "ชื่อซอฟต์แวร์",
+    "description": "คำอธิบาย",
+    "category": "หมวดหมู่",
+    "tags": "แท็ก",
+    "website": "เว็บไซต์",
+    "license": "สัญญาอนุญาต",
+    "screenshots": "ภาพหน้าจอ",
+    "icon": "ไอคอน",
+    "submitForReview": "ส่งเพื่อตรวจสอบ"
+  },
+  "status": {
+    "draft": "ร่าง",
+    "submitted": "ส่งแล้ว",
+    "under_review": "กำลังตรวจสอบ",
+    "approved": "อนุมัติแล้ว",
+    "published": "เผยแพร่แล้ว",
+    "rejected": "ถูกปฏิเสธ",
+    "archived": "เก็บถาวร",
+    "suspended": "ระงับชั่วคราว"
+  }
+}

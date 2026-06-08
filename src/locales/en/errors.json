@@ -1,0 +1,30 @@
+{
+  "generic": "An error occurred. Please try again.",
+  "notFound": "The page you are looking for was not found.",
+  "unauthorized": "You are not authorized to access this page.",
+  "forbidden": "Access denied.",
+  "serverError": "A server error occurred.",
+  "networkError": "Unable to connect to the network.",
+  "timeout": "Connection timed out.",
+  "validation": {
+    "required": "This field is required.",
+    "email": "Invalid email format.",
+    "minLength": "Must be at least {min} characters.",
+    "maxLength": "Must not exceed {max} characters.",
+    "url": "Invalid URL format.",
+    "fileSize": "File size must not exceed {size}.",
+    "fileType": "Unsupported file type."
+  },
+  "auth": {
+    "invalidCredentials": "Invalid email or password.",
+    "emailInUse": "This email is already in use.",
+    "weakPassword": "Password must be at least 8 characters.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "tooManyRequests": "Too many login attempts. Please wait a moment."
+  },
+  "upload": {
+    "failed": "File upload failed.",
+    "tooLarge": "File is too large.",
+    "invalidType": "Invalid file type."
+  }
+}

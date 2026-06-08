@@ -1,0 +1,43 @@
+{
+  "title": "Knowledge Hub",
+  "subtitle": "Articles and knowledge from the Thai developer community",
+  "allCategories": "All Categories",
+  "featured": "Featured",
+  "trending": "Trending",
+  "newest": "Newest",
+  "readTime": "{minutes} min read",
+  "card": {
+    "readMore": "Read More",
+    "views": "{count} views",
+    "likes": "{count} likes",
+    "comments": "{count} comments",
+    "publishedAt": "Published {date}",
+    "author": "By {name}"
+  },
+  "detail": {
+    "tableOfContents": "Table of Contents",
+    "relatedArticles": "Related Articles",
+    "tags": "Tags",
+    "shareArticle": "Share Article",
+    "likeArticle": "Like",
+    "addComment": "Add Comment"
+  },
+  "submit": {
+    "title": "Write Article",
+    "articleTitle": "Article Title",
+    "content": "Content",
+    "category": "Category",
+    "tags": "Tags",
+    "coverImage": "Cover Image",
+    "submitForReview": "Submit for Review",
+    "saveDraft": "Save Draft"
+  },
+  "status": {
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "under_review": "Under Review",
+    "approved": "Approved",
+    "published": "Published",
+    "rejected": "Rejected"
+  }
+}

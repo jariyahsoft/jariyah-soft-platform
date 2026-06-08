@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function hasRole(role) { return signedIn() && request.auth.token.role == role; }
+    function isModerator() { return hasRole('moderator') || hasRole('admin'); }
+    function isAdmin() { return hasRole('admin'); }
+    function isPublished() { return resource.data.status == 'published' && resource.data.deletedAt == null; }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role == 'member'
+        && request.resource.data.status == 'active';
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['displayName', 'photoURL', 'locale', 'notificationPreferences', 'updatedAt']);
+      allow delete: if false;
+    }
+
+    match /software/{id} {
+      allow read: if isPublished()
+        || (signedIn() && resource.data.ownerId == request.auth.uid)
+        || isModerator();
+      allow create: if signedIn()
+        && request.auth.token.role in ['developer', 'moderator', 'admin']
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status == 'draft';
+      allow update: if signedIn()
+        && resource.data.ownerId == request.auth.uid
+        && resource.data.status in ['draft', 'rejected']
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['name', 'slug', 'shortDescription', 'description',
+                    'categoryId', 'tagIds', 'platforms', 'licenseId',
+                    'logoPath', 'screenshotPaths', 'repositoryURL',
+                    'websiteURL', 'updatedAt']);
+      allow delete: if false;
+    }
+
+    match /articles/{id} {
+      allow read: if isPublished()
+        || (signedIn() && resource.data.authorId == request.auth.uid)
+        || isModerator();
+      allow create: if signedIn()
+        && request.auth.token.role in ['developer', 'moderator', 'admin']
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.status == 'draft';
+      allow update: if false; // via API for validation
+      allow delete: if false;
+    }
+
+    match /reviews/{id} {
+      allow read: if resource.data.status == 'approved' || isModerator();
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.status == 'pending';
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.softwareId == resource.data.softwareId
+        && request.resource.data.status == 'pending';
+      allow delete: if false;
+    }
+
+    match /notifications/{id} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt']);
+      allow create, delete: if false;
+    }
+
+    match /{serverOnlyCollection}/{id} {
+      allow read, write: if false;
+    }
+  }
+}

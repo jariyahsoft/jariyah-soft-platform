@@ -101,9 +101,10 @@ Read these before starting:
    - Date displays Buddhist Era in Thai
 
 ## Definition of Done
-- [ ] next-intl installed and configured
-- [ ] Translation files created (th + en)
-- [ ] `[locale]` routing working (`/th/`, `/en/`)
-- [ ] Middleware detects and redirects locale
-- [ ] SEO tags (hreflang, og:locale) present
-- [ ] No hardcoded text in components
+- [x] next-intl installed and configured
+- [x] Translation files created (th + en)
+- [x] `[locale]` routing working (`/th/`, `/en/`)
+- [x] Middleware detects and redirects locale
+- [x] SEO tags (hreflang, og:locale) present
+- [x] No hardcoded text in components
+

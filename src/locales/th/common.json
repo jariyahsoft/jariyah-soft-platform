@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "หน้าหลัก",
+    "software": "ซอฟต์แวร์",
+    "knowledge": "องค์ความรู้",
+    "developers": "นักพัฒนา",
+    "events": "กิจกรรม",
+    "learn": "เรียนรู้",
+    "jobs": "งาน",
+    "login": "เข้าสู่ระบบ",
+    "signup": "สมัครสมาชิก",
+    "search": "ค้นหา...",
+    "dashboard": "แดชบอร์ด",
+    "profile": "โปรไฟล์",
+    "logout": "ออกจากระบบ"
+  },
+  "actions": {
+    "download": "ดาวน์โหลด",
+    "submit": "ส่ง",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "edit": "แก้ไข",
+    "delete": "ลบ",
+    "retry": "ลองอีกครั้ง",
+    "confirm": "ยืนยัน",
+    "back": "ย้อนกลับ",
+    "next": "ถัดไป",
+    "close": "ปิด",
+    "share": "แชร์",
+    "report": "รายงาน",
+    "follow": "ติดตาม",
+    "unfollow": "เลิกติดตาม",
+    "viewAll": "ดูทั้งหมด"
+  },
+  "states": {
+    "loading": "กำลังโหลด...",
+    "empty": "ไม่พบข้อมูล",
+    "offline": "คุณกำลังใช้งานแบบออฟไลน์",
+    "error": "เกิดข้อผิดพลาด",
+    "success": "สำเร็จ",
+    "noResults": "ไม่พบผลลัพธ์",
+    "endOfList": "แสดงผลครบทุกรายการแล้ว"
+  },
+  "meta": {
+    "siteName": "จริยะซอฟต์",
+    "tagline": "แพลตฟอร์มซอฟต์แวร์ไทย"
+  },
+  "auth": {
+    "loginTitle": "เข้าสู่ระบบ",
+    "signupTitle": "สมัครสมาชิก",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "orContinueWith": "หรือเข้าสู่ระบบด้วย",
+    "agreeToTerms": "ฉันยอมรับ {terms} และ {privacy}",
+    "terms": "เงื่อนไขการใช้งาน",
+    "privacy": "นโยบายความเป็นส่วนตัว"
+  },
+  "pagination": {
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "page": "หน้า {current} จาก {total}"
+  }
+}
