@@ -78,11 +78,11 @@ Read these before starting:
    - Custom claims set correctly on new users
 
 ## Definition of Done
-- [ ] Email/password signup with verification
-- [ ] Google + GitHub OAuth login
-- [ ] Terms acceptance recorded
-- [ ] Auth context/hook working
-- [ ] Auth guard hook with role checking
-- [ ] User document auto-created on signup
-- [ ] Custom Claims Cloud Function deployed
-- [ ] Duplicate email handled securely
+- [x] Email/password signup with verification
+- [x] Google + GitHub OAuth login
+- [x] Terms acceptance recorded
+- [x] Auth context/hook working
+- [x] Auth guard hook with role checking
+- [x] User document auto-created on signup
+- [x] Custom Claims Cloud Function deployed
+- [x] Duplicate email handled securely

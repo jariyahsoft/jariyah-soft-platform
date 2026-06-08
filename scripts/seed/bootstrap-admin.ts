@@ -46,6 +46,7 @@ async function bootstrapAdmin() {
         userRecord = await admin.auth().createUser({
           uid,
           email: 'admin@jariyah.soft',
+          password: 'password123',
           emailVerified: true,
           displayName: 'System Administrator',
         });

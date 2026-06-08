@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { routing, type Locale } from '@/i18n/routing';
+import { AuthProvider } from '@/lib/firebase/auth-context';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -65,7 +66,9 @@ export default async function LocaleLayout({
       <link rel="alternate" hrefLang="en" href="/en" />
       <link rel="alternate" hrefLang="x-default" href="/th" />
       <NextIntlClientProvider messages={messages}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </NextIntlClientProvider>
     </>
   );
