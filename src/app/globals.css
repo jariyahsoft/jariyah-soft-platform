@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@config "../../tailwind.config.ts";
+
+:root {
+  --color-bg-primary: hsl(220, 20%, 10%);
+  --color-bg-secondary: hsl(220, 20%, 14%);
+  --color-bg-card: hsl(220, 18%, 18%);
+  --color-text-primary: hsl(0, 0%, 95%);
+  --color-text-secondary: hsl(220, 10%, 65%);
+  --color-accent: hsl(210, 100%, 60%);
+  --color-accent-hover: hsl(210, 100%, 50%);
+  --color-success: hsl(150, 70%, 45%);
+  --color-warning: hsl(40, 95%, 55%);
+  --color-danger: hsl(0, 80%, 55%);
+  --color-badge-bronze: hsl(30, 50%, 50%);
+  --color-badge-silver: hsl(210, 10%, 70%);
+  --color-badge-gold: hsl(45, 90%, 55%);
+  --color-badge-platinum: hsl(200, 20%, 85%);
+  --color-badge-elite: hsl(270, 60%, 60%);
+
+  --font-inter: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}

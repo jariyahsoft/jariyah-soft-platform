@@ -70,9 +70,10 @@ Read these before starting:
 7. **Verify**: Run `npm run dev` and confirm the app starts at localhost:3000
 
 ## Definition of Done
-- [ ] `npm run dev` starts without errors
-- [ ] TypeScript strict mode enabled
-- [ ] Tailwind CSS with design tokens configured
-- [ ] Folder structure matches ai/02-coding-rules.md
-- [ ] ESLint + Prettier configured and passing
-- [ ] `.env.example` created
+- [x] `npm run dev` starts without errors
+- [x] TypeScript strict mode enabled
+- [x] Tailwind CSS with design tokens configured
+- [x] Folder structure matches ai/02-coding-rules.md
+- [x] ESLint + Prettier configured and passing
+- [x] `.env.example` created
+
