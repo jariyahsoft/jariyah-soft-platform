@@ -88,14 +88,14 @@ Read these before starting:
    - Idempotency key prevents duplicate creates
 
 ## Definition of Done
-- [ ] Auth middleware verifies Firebase tokens
-- [ ] Role middleware checks custom claims
-- [ ] Software CRUD endpoints working
-- [ ] Article CRUD endpoints working
-- [ ] Moderation endpoints working
-- [ ] Standard error response format
-- [ ] Rate limiting functional
-- [ ] Idempotency-Key supported on mutations
+- [x] Auth middleware verifies Firebase tokens
+- [x] Role middleware checks custom claims
+- [x] Software CRUD endpoints working
+- [x] Article CRUD endpoints working
+- [x] Moderation endpoints working
+- [x] Standard error response format
+- [x] Rate limiting functional
+- [x] Idempotency-Key supported on mutations
 
 
 ---
