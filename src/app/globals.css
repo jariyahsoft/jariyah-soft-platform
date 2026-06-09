@@ -3,6 +3,28 @@
 @config "../../tailwind.config.ts";
 
 :root {
+  /* Light Mode (default) */
+  --color-bg-primary: hsl(210, 20%, 98%);
+  --color-bg-secondary: hsl(210, 20%, 94%);
+  --color-bg-card: hsl(0, 0%, 100%);
+  --color-text-primary: hsl(220, 20%, 12%);
+  --color-text-secondary: hsl(220, 10%, 46%);
+  --color-accent: hsl(210, 100%, 45%);
+  --color-accent-hover: hsl(210, 100%, 38%);
+  --color-success: hsl(142, 72%, 29%);
+  --color-warning: hsl(38, 92%, 50%);
+  --color-danger: hsl(0, 84%, 44%);
+  --color-badge-bronze: hsl(30, 50%, 45%);
+  --color-badge-silver: hsl(210, 10%, 60%);
+  --color-badge-gold: hsl(45, 90%, 45%);
+  --color-badge-platinum: hsl(200, 20%, 75%);
+  --color-badge-elite: hsl(270, 60%, 50%);
+
+  --font-inter: 'Inter', sans-serif;
+}
+
+.dark {
+  /* Dark Mode */
   --color-bg-primary: hsl(220, 20%, 10%);
   --color-bg-secondary: hsl(220, 20%, 14%);
   --color-bg-card: hsl(220, 18%, 18%);
@@ -18,11 +40,10 @@
   --color-badge-gold: hsl(45, 90%, 55%);
   --color-badge-platinum: hsl(200, 20%, 85%);
   --color-badge-elite: hsl(270, 60%, 60%);
-
-  --font-inter: 'Inter', sans-serif;
 }
 
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }

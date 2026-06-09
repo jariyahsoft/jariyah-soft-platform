@@ -16,7 +16,7 @@ const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   terms: z.literal(true, {
-    errorMap: () => ({ message: 'You must agree to the terms and privacy policy' }),
+    message: 'You must agree to the terms and privacy policy',
   }),
 });
 
@@ -64,7 +64,6 @@ export default function SignupPage() {
       setError(null);
       if (provider === 'google') await signInWithGoogle();
       if (provider === 'github') await signInWithGitHub();
-      // @ts-expect-error dynamic routing constraints
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : tStates('error'));

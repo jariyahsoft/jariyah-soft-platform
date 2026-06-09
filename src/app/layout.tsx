@@ -4,7 +4,7 @@ import './globals.css';
 
 const inter = Inter({
   variable: '--font-inter',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'thai' as any],
 });
 
 export const metadata: Metadata = {
@@ -30,6 +30,23 @@ export default function RootLayout({
   // via the [locale] segment and hreflang in generateMetadata.
   return (
     <html lang="th" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var theme = localStorage.getItem('theme');
+                var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+                if (theme === 'dark' || (!theme && !prefersLight)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

@@ -5,6 +5,9 @@ import { getMessages } from 'next-intl/server';
 import { routing, type Locale } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/firebase/auth-context';
 
+import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import { ToastProvider } from '@/components/ui/Toast';
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -67,7 +70,11 @@ export default async function LocaleLayout({
       <link rel="alternate" hrefLang="x-default" href="/th" />
       <NextIntlClientProvider messages={messages}>
         <AuthProvider>
-          {children}
+          <ThemeProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </ThemeProvider>
         </AuthProvider>
       </NextIntlClientProvider>
     </>

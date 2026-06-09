@@ -78,13 +78,13 @@ Read these before starting:
    - No hardcoded strings (all from i18n)
 
 ## Definition of Done
-- [ ] Header, Footer, Sidebar, DashboardLayout created
-- [ ] All UI primitives created and working
-- [ ] Dark mode toggle functional
-- [ ] Responsive navigation (desktop + mobile)
-- [ ] Loading/empty/error states created
-- [ ] Accessibility checklist passed
-- [ ] All text from i18n translation files
+- [x] Header, Footer, Sidebar, DashboardLayout created
+- [x] All UI primitives created and working
+- [x] Dark mode toggle functional
+- [x] Responsive navigation (desktop + mobile)
+- [x] Loading/empty/error states created
+- [x] Accessibility checklist passed
+- [x] All text from i18n translation files
 
 
 ---

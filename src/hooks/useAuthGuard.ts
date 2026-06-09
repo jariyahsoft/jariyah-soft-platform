@@ -17,7 +17,6 @@ export const useAuthGuard = ({ requiredRole, redirectTo = '/login' }: UseAuthGua
     if (loading) return;
 
     if (!isAuthenticated) {
-      // @ts-expect-error next-intl dynamic routing type constraints
       router.push(redirectTo);
       return;
     }
@@ -25,7 +24,6 @@ export const useAuthGuard = ({ requiredRole, redirectTo = '/login' }: UseAuthGua
     if (requiredRole && !isAtLeast(requiredRole)) {
       // Typically, one might redirect to a generic 403 page or home.
       // Assuming a generic access-denied or simply redirecting to home.
-      // @ts-expect-error next-intl dynamic routing type constraints
       router.push('/');
     }
   }, [loading, isAuthenticated, requiredRole, isAtLeast, router, redirectTo]);

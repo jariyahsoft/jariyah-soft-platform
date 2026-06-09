@@ -42,7 +42,6 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       // Ideally redirect to the previous page or dashboard
-      // @ts-expect-error dynamic routing constraints
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error(err);
@@ -57,7 +56,6 @@ export default function LoginPage() {
       setError(null);
       if (provider === 'google') await signInWithGoogle();
       if (provider === 'github') await signInWithGitHub();
-      // @ts-expect-error dynamic routing constraints
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : tStates('error'));
