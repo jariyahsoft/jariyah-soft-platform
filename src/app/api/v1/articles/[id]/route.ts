@@ -67,7 +67,7 @@ export const PATCH = withAuth(async (req: any, { params }: { params: Promise<{ i
         ApiErrors.VALIDATION_ERROR.code,
         ApiErrors.VALIDATION_ERROR.message,
         ApiErrors.VALIDATION_ERROR.status,
-        parsed.error.errors.map((e) => ({ field: e.path.join('.'), reason: e.message }))
+        parsed.error.issues.map((e) => ({ field: e.path.join('.'), reason: e.message }))
       );
     }
 

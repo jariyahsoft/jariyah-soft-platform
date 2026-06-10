@@ -30,6 +30,24 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ id
       );
     }
 
+    const hasRequiredFields =
+      data?.name &&
+      data?.shortDescription &&
+      data?.description &&
+      data?.categoryId &&
+      data?.licenseId &&
+      Array.isArray(data?.platforms) &&
+      data.platforms.length > 0 &&
+      (data?.downloadURL || data?.repositoryURL || data?.websiteURL);
+
+    if (!hasRequiredFields) {
+      return errorResponse(
+        ApiErrors.BUSINESS_RULE_VIOLATION.code,
+        'Submit requires name, descriptions, category, license, platform, and a download/repository/website link',
+        ApiErrors.BUSINESS_RULE_VIOLATION.status
+      );
+    }
+
     await docRef.update({
       status: 'pending', // pending review by moderator
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),

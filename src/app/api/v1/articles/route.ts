@@ -23,7 +23,7 @@ export const GET = async (req: NextRequest) => {
         ApiErrors.VALIDATION_ERROR.code,
         ApiErrors.VALIDATION_ERROR.message,
         ApiErrors.VALIDATION_ERROR.status,
-        parsedPagination.error.errors.map((e) => ({ field: e.path.join('.'), reason: e.message }))
+        parsedPagination.error.issues.map((e) => ({ field: e.path.join('.'), reason: e.message }))
       );
     }
 
@@ -33,8 +33,9 @@ export const GET = async (req: NextRequest) => {
     const snapshot = await query.get();
     const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    const nextCursor = snapshot.docs.length === parsedPagination.data.limit 
-      ? snapshot.docs[snapshot.docs.length - 1].id 
+    const lastDoc = snapshot.docs.at(-1);
+    const nextCursor = snapshot.docs.length === parsedPagination.data.limit && lastDoc
+      ? lastDoc.id
       : null;
 
     return successResponse(data, { nextCursor });
@@ -57,7 +58,7 @@ export const POST = withRateLimit({ max: 10, windowMs: 60000 },
             ApiErrors.VALIDATION_ERROR.code,
             ApiErrors.VALIDATION_ERROR.message,
             ApiErrors.VALIDATION_ERROR.status,
-            parsed.error.errors.map((e) => ({ field: e.path.join('.'), reason: e.message }))
+            parsed.error.issues.map((e) => ({ field: e.path.join('.'), reason: e.message }))
           );
         }
 

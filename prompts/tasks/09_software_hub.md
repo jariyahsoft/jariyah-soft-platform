@@ -83,15 +83,15 @@ Read these before starting:
    - Mobile responsive
 
 ## Definition of Done
-- [ ] Software list page with ISR + filtering
-- [ ] Software detail page with tabs
-- [ ] Software submission form with upload
-- [ ] Draft save/submit workflow
-- [ ] Download event tracking
-- [ ] Developer dashboard with status management
-- [ ] All UI states handled
-- [ ] Responsive on all breakpoints
-- [ ] SEO metadata present
+- [x] Software list page with ISR + filtering
+- [x] Software detail page with tabs
+- [x] Software submission form with upload
+- [x] Draft save/submit workflow
+- [x] Download event tracking
+- [x] Developer dashboard with status management
+- [x] All UI states handled
+- [x] Responsive on all breakpoints
+- [x] SEO metadata present
 
 
 ---

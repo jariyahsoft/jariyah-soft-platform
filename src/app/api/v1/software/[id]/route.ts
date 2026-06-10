@@ -10,8 +10,17 @@ import * as admin from 'firebase-admin';
 export const GET = withApiKey(async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   try {
     const { id } = await params;
-    const docRef = adminDb.collection('software').doc(id);
-    const docSnap = await docRef.get();
+    let docSnap = await adminDb.collection('software').doc(id).get();
+
+    if (!docSnap.exists) {
+      const slugSnap = await adminDb
+        .collection('software')
+        .where('slug', '==', id)
+        .where('status', '==', 'published')
+        .limit(1)
+        .get();
+      docSnap = slugSnap.docs[0] ?? docSnap;
+    }
 
     if (!docSnap.exists) {
       return errorResponse(ApiErrors.NOT_FOUND.code, 'Software not found', ApiErrors.NOT_FOUND.status);
@@ -60,7 +69,7 @@ export const PATCH = withAuth(async (req: any, { params }: { params: Promise<{ i
     }
 
     // Check ETag (We'll use updatedAt timestamp as a simple ETag proxy)
-    const currentETag = `"${data?.updatedAt?.toMillis()}"`;
+    const currentETag = data?.updatedAt?.toMillis ? `"${data.updatedAt.toMillis()}"` : '*';
     if (ifMatch !== currentETag && ifMatch !== '*') {
        return errorResponse(ApiErrors.PRECONDITION_FAILED.code, 'ETag mismatch', ApiErrors.PRECONDITION_FAILED.status);
     }
@@ -73,12 +82,13 @@ export const PATCH = withAuth(async (req: any, { params }: { params: Promise<{ i
         ApiErrors.VALIDATION_ERROR.code,
         ApiErrors.VALIDATION_ERROR.message,
         ApiErrors.VALIDATION_ERROR.status,
-        parsed.error.errors.map((e) => ({ field: e.path.join('.'), reason: e.message }))
+        parsed.error.issues.map((e) => ({ field: e.path.join('.'), reason: e.message }))
       );
     }
 
     const updateData = {
       ...parsed.data,
+      searchSyncStatus: 'pending',
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 

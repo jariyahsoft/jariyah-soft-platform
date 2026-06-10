@@ -1,0 +1,159 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Code, ExternalLink, Share2, Star } from 'lucide-react';
+import { DownloadButton } from '@/components/software/DownloadButton';
+import { SoftwareDetailTabs } from '@/components/software/SoftwareDetailTabs';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { getPublishedSoftwareBySlug } from '@/lib/software/data';
+import { PLATFORM_LABELS } from '@/lib/software/types';
+
+export const revalidate = 300;
+
+interface SoftwareDetailPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: SoftwareDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const software = await getPublishedSoftwareBySlug(slug);
+
+  if (!software) {
+    return {
+      title: 'Software not found | Jariyah Soft',
+    };
+  }
+
+  return {
+    title: `${software.name} | Jariyah Soft`,
+    description: software.shortDescription,
+    openGraph: {
+      title: software.name,
+      description: software.shortDescription,
+      images: software.logoPath ? [software.logoPath] : ['/opengraph-image.png'],
+    },
+  };
+}
+
+export default async function SoftwareDetailPage({ params }: SoftwareDetailPageProps) {
+  const { slug } = await params;
+  const software = await getPublishedSoftwareBySlug(slug);
+
+  if (!software) notFound();
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: software.name,
+    description: software.shortDescription,
+    applicationCategory: software.categoryName,
+    operatingSystem: software.platforms.map((platform) => PLATFORM_LABELS[platform] ?? platform).join(', '),
+    aggregateRating:
+      software.ratingCount > 0
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue: software.ratingAverage,
+            ratingCount: software.ratingCount,
+          }
+        : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  };
+
+  return (
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(0,120,255,0.16),transparent_34rem)] px-4 py-10 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <div className="mx-auto max-w-7xl">
+        <section className="grid gap-6 lg:grid-cols-[1fr_340px]">
+          <div className="rounded-[2rem] border border-text-secondary/10 bg-bg-card p-6 md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start">
+              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl border border-accent/20 bg-gradient-to-br from-accent/25 to-bg-secondary text-4xl font-black text-accent">
+                {software.logoPath ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={software.logoPath} alt="" className="h-full w-full rounded-3xl object-cover" />
+                ) : (
+                  software.name.slice(0, 1).toUpperCase()
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="info">{software.categoryName}</Badge>
+                  <Badge variant="success">Published</Badge>
+                </div>
+                <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">{software.name}</h1>
+                <p className="mt-2 text-lg text-text-secondary">by {software.developerName}</p>
+                <p className="mt-5 max-w-3xl text-lg leading-8 text-text-secondary">{software.shortDescription}</p>
+                <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
+                  <span className="inline-flex items-center gap-1 font-bold text-text-primary">
+                    <Star className="h-5 w-5 fill-warning text-warning" />
+                    {software.ratingAverage.toFixed(1)} ({software.ratingCount} reviews)
+                  </span>
+                  <span>{software.downloadCount.toLocaleString()} downloads</span>
+                  {software.latestVersion && <span>Version {software.latestVersion}</span>}
+                </div>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <DownloadButton softwareId={software.id} />
+                  {software.repositoryURL && (
+                    <a href={software.repositoryURL} target="_blank" rel="noreferrer">
+                      <Button variant="secondary" size="lg">
+                        <Code className="mr-2 h-5 w-5" />
+                        GitHub
+                      </Button>
+                    </a>
+                  )}
+                  {software.websiteURL && (
+                    <a href={software.websiteURL} target="_blank" rel="noreferrer">
+                      <Button variant="outline" size="lg">
+                        <ExternalLink className="mr-2 h-5 w-5" />
+                        Website
+                      </Button>
+                    </a>
+                  )}
+                  <Button variant="ghost" size="lg">
+                    <Share2 className="mr-2 h-5 w-5" />
+                    Share
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside className="rounded-[2rem] border border-text-secondary/10 bg-bg-card p-6">
+            <h2 className="text-lg font-bold">Release details</h2>
+            <dl className="mt-5 space-y-4 text-sm">
+              <div>
+                <dt className="font-semibold text-text-secondary">Platforms</dt>
+                <dd className="mt-1 flex flex-wrap gap-2">
+                  {software.platforms.map((platform) => (
+                    <Badge key={platform}>{PLATFORM_LABELS[platform] ?? platform}</Badge>
+                  ))}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-text-secondary">License</dt>
+                <dd className="mt-1 text-text-primary">{software.licenseName}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-text-secondary">Updated</dt>
+                <dd className="mt-1 text-text-primary">
+                  {software.updatedAt ? new Date(software.updatedAt).toLocaleDateString() : 'Unknown'}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-text-secondary">File size</dt>
+                <dd className="mt-1 text-text-primary">{software.fileSize ?? 'Not provided'}</dd>
+              </div>
+            </dl>
+          </aside>
+        </section>
+
+        <div className="mt-6">
+          <SoftwareDetailTabs software={software} />
+        </div>
+      </div>
+    </main>
+  );
+}

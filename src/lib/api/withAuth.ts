@@ -25,14 +25,22 @@ export function withAuth(handler: AuthApiHandler): ApiHandler {
     }
 
     const token = authHeader.split('Bearer ')[1];
+    if (!token) {
+      return errorResponse(
+        ApiErrors.UNAUTHENTICATED.code,
+        'Missing bearer token',
+        ApiErrors.UNAUTHENTICATED.status
+      );
+    }
+
     try {
       const decodedToken = await adminAuth.verifyIdToken(token);
       
       const authReq = req as AuthenticatedRequest;
       authReq.user = {
+        ...decodedToken,
         uid: decodedToken.uid,
         role: decodedToken.role || 'member',
-        ...decodedToken,
       };
 
       return handler(authReq, context);
