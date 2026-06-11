@@ -75,14 +75,14 @@ Read these before starting:
    - Mobile responsive
 
 ## Definition of Done
-- [ ] Article list page with filtering
-- [ ] Article detail page with sanitized Markdown
-- [ ] Article submission form with Markdown preview
-- [ ] Table of contents auto-generated
-- [ ] Code syntax highlighting working
-- [ ] Cover image upload
-- [ ] All UI states handled
-- [ ] SEO metadata present
+- [x] Article list page with filtering
+- [x] Article detail page with sanitized Markdown
+- [x] Article submission form with Markdown preview
+- [x] Table of contents auto-generated
+- [x] Code syntax highlighting working
+- [x] Cover image upload
+- [x] All UI states handled
+- [x] SEO metadata present
 
 
 ---
