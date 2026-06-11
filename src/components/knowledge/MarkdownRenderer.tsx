@@ -13,9 +13,7 @@ interface MarkdownRendererProps {
 const embedAllowlist = [
   'youtube.com',
   'youtu.be',
-  'www.youtube.com',
   'gist.github.com',
-  'github.com',
 ];
 
 const sanitizeSchema = {
@@ -29,11 +27,11 @@ const sanitizeSchema = {
 };
 
 function validateUrl(url: string): boolean {
-  if (!url) return false;
+  if (!url) return true;
   if (url.startsWith('/') || url.startsWith('#')) return true;
   try {
     const parsed = new URL(url);
-    return embedAllowlist.some((domain) => parsed.hostname.includes(domain));
+    return embedAllowlist.some((domain) => parsed.hostname === domain || parsed.hostname.endsWith('.' + domain));
   } catch {
     return false;
   }

@@ -1,4 +1,4 @@
-import { Clock, FileText } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';

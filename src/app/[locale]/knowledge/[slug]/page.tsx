@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Calendar, Clock, Share2 } from 'lucide-react';
+import * as admin from 'firebase-admin';
+import { adminDb } from '@/lib/firebase/admin';
 import { MarkdownRenderer } from '@/components/knowledge/MarkdownRenderer';
 import { Badge } from '@/components/ui/Badge';
 import { ArticleCard } from '@/components/knowledge/ArticleCard';
@@ -76,11 +78,25 @@ async function getRelatedArticles(currentArticle: ArticleItem, currentSlug: stri
   return items.filter((item) => item.slug !== currentSlug);
 }
 
+async function incrementViewCount(articleId: string) {
+  try {
+    await adminDb.collection('articles').doc(articleId).update({
+      viewCount: admin.firestore.FieldValue.increment(1),
+    });
+  } catch (error) {
+    console.warn('Failed to increment view count:', error);
+  }
+}
+
 export default async function KnowledgeDetailPage({ params }: KnowledgeDetailPageProps) {
   const { slug } = await params;
   const article = await getPublishedArticleBySlug(slug);
 
   if (!article) notFound();
+
+  if (article.id) {
+    incrementViewCount(article.id);
+  }
 
   const headings = extractHeadings(article.body);
   const relatedArticles = await getRelatedArticles(article, slug);

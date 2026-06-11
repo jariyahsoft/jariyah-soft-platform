@@ -8,6 +8,14 @@ import { articleDraftSchema } from '@/lib/validators/article';
 import { paginationSchema } from '@/lib/validators/shared';
 import * as admin from 'firebase-admin';
 
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 // GET /api/v1/articles
 export const GET = async (req: NextRequest) => {
   try {
@@ -64,8 +72,11 @@ export const POST = withRateLimit({ max: 10, windowMs: 60000 },
 
         const articleData = {
           ...parsed.data,
+          slug: parsed.data.slug || slugify(parsed.data.title),
+          contentType: 'markdown',
           authorId: req.user.uid,
           status: 'draft',
+          viewCount: 0,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         };
