@@ -73,3 +73,6 @@ functions/lib/
 
 # Claude code
 .claude/settings.local.json
+
+# Codex 
+.codex
