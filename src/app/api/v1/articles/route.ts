@@ -77,6 +77,7 @@ export const POST = withRateLimit({ max: 10, windowMs: 60000 },
           authorId: req.user.uid,
           status: 'draft',
           viewCount: 0,
+          searchSyncStatus: 'pending',
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         };

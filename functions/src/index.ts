@@ -6,3 +6,6 @@ admin.initializeApp();
 // Export all Auth functions
 export * from './auth/onUserCreate';
 export * from './auth/setRole';
+
+// Export all Search functions
+export * as search from './search';

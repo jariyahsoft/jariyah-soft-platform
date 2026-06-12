@@ -67,3 +67,7 @@ storybook-static/
 
 # Kilo code
 .kilo
+
+# Firebase functions compiled output
+functions/lib/
+

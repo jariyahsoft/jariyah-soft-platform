@@ -81,15 +81,15 @@ Read these before starting:
    - Unpublished content never appears in search
 
 ## Definition of Done
-- [ ] Typesense client configured
-- [ ] Schemas created with Thai tokenizer
-- [ ] Sync Cloud Functions deployed
-- [ ] Nightly reconciliation scheduled
-- [ ] Thai/English synonyms configured
-- [ ] SearchBar component with instant results
-- [ ] Full search results page with facets
-- [ ] Fallback when search unavailable
-- [ ] Private data never in search index
+- [x] Typesense client configured
+- [x] Schemas created with Thai tokenizer
+- [x] Sync Cloud Functions deployed
+- [x] Nightly reconciliation scheduled
+- [x] Thai/English synonyms configured
+- [x] SearchBar component with instant results
+- [x] Full search results page with facets
+- [x] Fallback when search unavailable
+- [x] Private data never in search index
 
 
 ---
