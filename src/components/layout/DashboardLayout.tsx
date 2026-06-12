@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useLocale } from 'next-intl';
+import { useAuth } from '@/hooks/useAuth';
 import { LayoutDashboard, User, Settings, FolderKanban, Menu, X, ArrowLeft } from 'lucide-react';
 
 interface SidebarNavItem {
@@ -20,7 +21,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navItems: SidebarNavItem[] = [
+  const { isAtLeast } = useAuth();
+
+  const baseNavItems: SidebarNavItem[] = [
     {
       href: '/dashboard',
       label: { th: 'ภาพรวมระบบ', en: 'Overview' },
@@ -42,6 +45,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       icon: <Settings className="h-4.5 w-4.5" />,
     },
   ];
+
+  const moderatorItems: SidebarNavItem[] = isAtLeast('moderator') ? [
+    {
+      href: '/dashboard/moderation',
+      label: { th: 'ตรวจสอบผลงาน', en: 'Moderation' },
+      icon: <LayoutDashboard className="h-4.5 w-4.5" />,
+    }
+  ] : [];
+
+  const adminItems: SidebarNavItem[] = isAtLeast('admin') ? [
+    {
+      href: '/dashboard/admin/audit',
+      label: { th: 'ประวัติการใช้งาน (Audit)', en: 'Audit Logs' },
+      icon: <LayoutDashboard className="h-4.5 w-4.5" />,
+    }
+  ] : [];
+
+  const navItems = [...baseNavItems, ...moderatorItems, ...adminItems];
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-bg-card border-r border-text-secondary/10 w-64">

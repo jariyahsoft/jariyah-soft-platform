@@ -9,3 +9,6 @@ export * from './auth/setRole';
 
 // Export all Search functions
 export * as search from './search';
+
+// Export all Moderation functions
+export * as moderation from './moderation';

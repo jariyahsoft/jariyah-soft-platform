@@ -1,31 +1,39 @@
-import { NextRequest } from 'next/server';
-import { adminDb } from '@/lib/firebase/admin';
-import { withRole } from '@/lib/api/withRole';
+import { withAuth } from '@/lib/api/withAuth';
 import { successResponse, errorResponse, ApiErrors } from '@/lib/api/response';
+import { listPendingModerationSubmissions, type ModerationResourceType } from '@/lib/moderation/data';
 
-// GET /api/v1/moderation/submissions
-export const GET = withRole('moderator', async (req: any) => {
+export const GET = withAuth(async (req: any) => {
   try {
-    const { searchParams } = new URL(req.url);
-    const type = searchParams.get('type'); // 'software' | 'articles'
-    
-    if (!type || (type !== 'software' && type !== 'articles')) {
-      return errorResponse(
-        ApiErrors.VALIDATION_ERROR.code,
-        "Query parameter 'type' must be 'software' or 'articles'",
-        ApiErrors.VALIDATION_ERROR.status
-      );
+    if (req.user.role !== 'moderator' && req.user.role !== 'admin') {
+      return errorResponse(ApiErrors.FORBIDDEN.code, 'Requires moderator role', ApiErrors.FORBIDDEN.status);
     }
 
-    const snapshot = await adminDb.collection(type)
-      .where('status', '==', 'pending')
-      .orderBy('updatedAt', 'asc')
-      .limit(50)
-      .get();
+    const searchParams = req.nextUrl.searchParams;
+    const typeFilter = searchParams.get('type');
+    const assignee = searchParams.get('assignee');
+    const dateFrom = searchParams.get('dateFrom');
+    const dateTo = searchParams.get('dateTo');
+    const cursor = searchParams.get('cursor');
+    const limitParam = parseInt(searchParams.get('limit') || '20', 10);
+    const limit = Math.min(limitParam, 100);
 
-    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    if (typeFilter && typeFilter !== 'software' && typeFilter !== 'article' && typeFilter !== 'all') {
+      return errorResponse(ApiErrors.VALIDATION_ERROR.code, 'Invalid type filter', ApiErrors.VALIDATION_ERROR.status);
+    }
 
-    return successResponse(data);
+    const { items, nextCursor } = await listPendingModerationSubmissions({
+      type: (typeFilter as ModerationResourceType | 'all' | null) ?? 'all',
+      assignee: assignee ?? undefined,
+      dateFrom: dateFrom ?? undefined,
+      dateTo: dateTo ?? undefined,
+      cursor: cursor ?? undefined,
+      limit,
+    });
+
+    return successResponse({
+      items,
+      totalCount: items.length,
+    }, { nextCursor });
   } catch (error) {
     console.error('Error fetching submissions:', error);
     return errorResponse(ApiErrors.INTERNAL_ERROR.code, 'Failed to fetch submissions', ApiErrors.INTERNAL_ERROR.status);
