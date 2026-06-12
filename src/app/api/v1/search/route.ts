@@ -49,14 +49,14 @@ export async function GET(req: NextRequest) {
       const developerResults = await client.collections('developers').documents().search(searchParams_multi);
 
       const allResults = [
-        ...(softwareResults.hits ?? []).map((hit: SearchHit) => ({
+        ...(softwareResults.hits ?? []).map((hit: any) => ({
           id: hit.document.id,
           title: hit.document.name,
           excerpt: hit.document.shortDescription,
           categoryName: hit.document.categoryName,
           type: 'software' as const,
         })),
-        ...(articleResults.hits ?? []).map((hit: SearchHit) => ({
+        ...(articleResults.hits ?? []).map((hit: any) => ({
           id: hit.document.id,
           title: hit.document.title,
           excerpt: hit.document.excerpt,

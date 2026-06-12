@@ -67,14 +67,14 @@ Read these before starting:
    - Notifications sent to developer
 
 ## Definition of Done
-- [ ] Moderation dashboard with pending queue
-- [ ] Review detail page with full content
-- [ ] Approve/Reject workflow with transaction
-- [ ] Rejection requires reason code + note
-- [ ] Self-approval blocked
-- [ ] Audit log created on every decision
-- [ ] Notification sent to developer
-- [ ] Admin audit log viewer
+- [x] Moderation dashboard with pending queue
+- [x] Review detail page with full content
+- [x] Approve/Reject workflow with transaction
+- [x] Rejection requires reason code + note
+- [x] Self-approval blocked
+- [x] Audit log created on every decision
+- [x] Notification sent to developer
+- [x] Admin audit log viewer
 
 
 ---

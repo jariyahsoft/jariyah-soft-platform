@@ -62,6 +62,10 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
     }
   }
 
+  const currentParams = {
+    q, type: activeType, category: activeCategory, language: activeLanguage, sort: activeSort
+  };
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_center,rgba(0,120,255,0.14),transparent_34rem)] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -99,7 +103,7 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                       {['all', 'software', 'articles'].map((type) => (
                         <Link
                           key={type}
-                          href={filterHref({ type })}
+                          href={filterHref(currentParams, { type })}
                         >
                           <button
                             type="button"
@@ -120,7 +124,7 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                     </h2>
                     <div className="mt-3 space-y-2">
                       {SOFTWARE_CATEGORIES.map((category) => (
-                        <Link key={category.id} href={filterHref({ category: activeCategory === category.id ? undefined : category.id })}>
+                        <Link key={category.id} href={filterHref(currentParams, { category: activeCategory === category.id ? undefined : category.id })}>
                           <button
                             type="button"
                             className={`block rounded-xl px-3 py-2 text-sm font-semibold text-left ${
@@ -142,7 +146,7 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                     </h2>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {['th', 'en'].map((value) => (
-                        <Link key={value} href={filterHref({ language: activeLanguage === value ? undefined : value })}>
+                        <Link key={value} href={filterHref(currentParams, { language: activeLanguage === value ? undefined : value })}>
                           <button
                             type="button"
                             className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
@@ -166,7 +170,7 @@ export default async function SearchResultsPage({ searchParams }: SearchResultsP
                 <p className="text-sm text-text-secondary">{items.length} results</p>
                 <div className="flex flex-wrap gap-2">
                   {['relevance', 'recency', 'popularity'].map((value) => (
-                    <Link key={value} href={filterHref({ sort: value })}>
+                    <Link key={value} href={filterHref(currentParams, { sort: value })}>
                       <button
                         type="button"
                         className={`rounded-full px-4 py-2 text-sm font-semibold ${

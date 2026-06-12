@@ -71,3 +71,5 @@ storybook-static/
 # Firebase functions compiled output
 functions/lib/
 
+# Claude code
+.claude/settings.local.json
