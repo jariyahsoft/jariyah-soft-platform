@@ -67,14 +67,15 @@ Read these before starting:
    - SEO meta tags present
 
 ## Definition of Done
-- [ ] Hero section with search bar
-- [ ] Stats section with animated counters
-- [ ] Trending software carousel
-- [ ] Recent articles grid
-- [ ] CTA section for developer signup
-- [ ] SEO metadata complete
-- [ ] Core Web Vitals: LCP < 2.5s, CLS < 0.1
-- [ ] Mobile responsive
+- [ ] Hero section renders with i18n headline, project subheadline, centered search bar, and CTA
+- [ ] Stats section shows animated counters sourced from live metrics and animates on scroll into view
+- [ ] Trending software carousel displays 8-10 items with horizontal scrolling and pause-on-hover
+- [ ] Recent knowledge articles grid displays 4-6 published items with a "ดูทั้งหมด" link
+- [ ] CTA section encourages developer signup with benefits list and primary registration button
+- [ ] SEO metadata is complete, including title, description, Open Graph, schema.org, and `hreflang`
+- [ ] All visible text is sourced from i18n translations
+- [ ] Core Web Vitals targets are met: LCP < 2.5s and CLS < 0.1
+- [ ] Layout is responsive and usable on mobile and desktop
 
 
 ---
