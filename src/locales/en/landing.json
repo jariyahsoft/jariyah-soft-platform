@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "title": "Digital Software & Knowledge Platform - Thai Software Platform",
+    "description": "Discover trusted Thai software, learn from practical knowledge, and support local developers.",
+    "siteName": "JariyahSoft"
+  },
+  "badge": "Trusted software and learning hub",
+  "headline": "Thai software platform",
+  "subheadline": "Discover, download, and share quality software from Thai developers while learning from a living knowledge base.",
+  "searchPlaceholder": "Search software, articles, and developers",
+  "primaryCta": "Explore software",
+  "secondaryCta": "Become a developer",
+  "stats": {
+    "software": "Software",
+    "developers": "Developers",
+    "articles": "Articles",
+    "downloads": "Downloads"
+  },
+  "trending": {
+    "eyebrow": "Trending",
+    "title": "Trending software",
+    "viewAll": "View all"
+  },
+  "articles": {
+    "eyebrow": "Knowledge",
+    "title": "Recent articles",
+    "viewAll": "View all"
+  },
+  "cta": {
+    "eyebrow": "Join the platform",
+    "title": "Become a developer with us",
+    "description": "Build a public profile, publish software and articles, and grow with a trusted distribution channel.",
+    "benefits": [
+      "Showcase software with verified visibility",
+      "Share articles with a built-in audience",
+      "Access moderation, analytics, and growth tools"
+    ],
+    "primaryCta": "Register as a developer",
+    "fastDiscoveryTitle": "Fast discovery",
+    "fastDiscoveryDescription": "One search bar connects software, articles, and developers.",
+    "moderationTitle": "Trusted moderation",
+    "moderationDescription": "Content passes moderation before reaching the public list."
+  }
+}
