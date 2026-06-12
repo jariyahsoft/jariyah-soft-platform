@@ -7,6 +7,7 @@ import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { storage } from '@/lib/firebase/config';
+import { slugify } from '@/lib/utils/slug';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -58,14 +59,6 @@ const defaultFormState: FormState = {
   screenshotPaths: [],
   fileSize: '',
 };
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 function imageDimensions(file: File) {
   return new Promise<{ width: number; height: number }>((resolve, reject) => {

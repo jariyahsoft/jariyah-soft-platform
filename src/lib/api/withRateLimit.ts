@@ -5,6 +5,10 @@ import { errorResponse, ApiErrors } from './response';
 // In production, use Redis or Firestore.
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
+export function clearRateLimitStore() {
+  rateLimitMap.clear();
+}
+
 export interface RateLimitConfig {
   max: number;
   windowMs: number;

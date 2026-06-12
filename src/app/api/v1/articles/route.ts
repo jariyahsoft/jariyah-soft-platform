@@ -4,17 +4,10 @@ import { withRole } from '@/lib/api/withRole';
 import { withRateLimit } from '@/lib/api/withRateLimit';
 import { withIdempotency } from '@/lib/api/withIdempotency';
 import { successResponse, errorResponse, ApiErrors } from '@/lib/api/response';
+import { slugify } from '@/lib/utils/slug';
 import { articleDraftSchema } from '@/lib/validators/article';
 import { paginationSchema } from '@/lib/validators/shared';
 import * as admin from 'firebase-admin';
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 // GET /api/v1/articles
 export const GET = async (req: NextRequest) => {

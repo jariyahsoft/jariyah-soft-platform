@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle2, ImagePlus, Save, Send } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { storage } from '@/lib/firebase/config';
+import { slugify } from '@/lib/utils/slug';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -42,14 +43,6 @@ const defaultFormState: FormState = {
   language: 'th',
   coverPath: '',
 };
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 export function ArticleSubmissionForm({ mode = 'create', initialArticle }: ArticleSubmissionFormProps) {
   const { user } = useAuth();

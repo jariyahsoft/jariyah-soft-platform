@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Basic in-memory store for dev
-const idempotencyMap = new Map<string, any>();
+const idempotencyMap = new Map<
+  string,
+  {
+    body: unknown;
+    headers: Record<string, string>;
+    status: number;
+  }
+>();
+
+export function clearIdempotencyCache() {
+  idempotencyMap.clear();
+}
 
 export function withIdempotency(handler: (req: NextRequest, context: any) => Promise<Response>) {
   return async (req: NextRequest, context: any) => {
@@ -17,7 +28,11 @@ export function withIdempotency(handler: (req: NextRequest, context: any) => Pro
 
     if (idempotencyMap.has(key)) {
       const cached = idempotencyMap.get(key);
-      return NextResponse.json(cached.body, { status: cached.status, headers: cached.headers });
+      const replayStatus = cached?.status === 201 ? 200 : cached?.status ?? 200;
+      return NextResponse.json(cached?.body, {
+        headers: cached?.headers,
+        status: replayStatus,
+      });
     }
 
     const response = await handler(req, context) as NextResponse;
@@ -26,10 +41,12 @@ export function withIdempotency(handler: (req: NextRequest, context: any) => Pro
       try {
         const cloned = response.clone();
         const body = await cloned.json();
+        const headers = Object.fromEntries(response.headers.entries());
         
         idempotencyMap.set(key, {
-          status: response.status,
           body,
+          headers,
+          status: response.status,
         });
         
         // Cleanup after 24 hours

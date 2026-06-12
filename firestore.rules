@@ -55,14 +55,20 @@ service cloud.firestore {
       allow read: if resource.data.status == 'approved' || isModerator();
       allow create: if signedIn()
         && request.resource.data.userId == request.auth.uid
+        && request.resource.data.softwareId is string
         && request.resource.data.rating >= 1
         && request.resource.data.rating <= 5
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status == 'pending'
+        && exists(/databases/$(database)/documents/software/$(request.resource.data.softwareId))
+        && get(/databases/$(database)/documents/software/$(request.resource.data.softwareId)).data.status == 'published'
+        && get(/databases/$(database)/documents/software/$(request.resource.data.softwareId)).data.ownerId != request.auth.uid;
       allow update: if signedIn()
         && resource.data.userId == request.auth.uid
         && request.resource.data.userId == resource.data.userId
         && request.resource.data.softwareId == resource.data.softwareId
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status == 'pending'
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
       allow delete: if false;
     }
 
