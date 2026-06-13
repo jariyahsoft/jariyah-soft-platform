@@ -22,3 +22,6 @@ export * as social from './social';
 // Export all Reputation & Trending functions
 export * as reputation from './reputation';
 
+// Export all Learning functions
+export * as learning from './learning';
+
