@@ -25,3 +25,6 @@ export * as reputation from './reputation';
 // Export all Learning functions
 export * as learning from './learning';
 
+// Export all Event functions
+export * as events from './events';
+
