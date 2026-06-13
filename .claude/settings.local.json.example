@@ -1,12 +1,15 @@
 {
     "env": {
-        "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+        "ANTHROPIC_BASE_URL": "https://api.vectorengine.ai",
         "ANTHROPIC_AUTH_TOKEN": "sk-xxxxxxxxxxxxxxxx",
-        "ANTHROPIC_MODEL": "deepseek-v4-pro",
-        "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_MODEL": "grok-4-fast-non-reasoning",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M3",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-        "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_SUBAGENT_MODEL": "grok-4-fast-non-reasoning",
+        "CLAUDE_CODE_EFFORT_LEVEL": "medium",
+        "API_TIMEOUT_MS": "300000",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+        "CLAUDE_CODE_DISABLE_MODEL_VALIDATION": "1"
     }
 }
