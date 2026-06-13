@@ -93,7 +93,7 @@ export default function ModerationDashboard() {
   async function fetchReports() {
     try {
       setLoading(true);
-      const { db } = await import('@/lib/firebase/client');
+      const { db } = await import('@/lib/firebase/config');
       const { collection, query, orderBy, getDocs, limit, where } = await import('firebase/firestore');
       
       let q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'), limit(20));
@@ -223,129 +223,143 @@ export default function ModerationDashboard() {
           message={error}
           onRetry={() => void fetchSubmissions()}
         />
-      ) : submissions.length === 0 ? (
-        <EmptyState
-          title={locale === 'th' ? 'ไม่มีผลงานรอตรวจสอบ' : 'No pending submissions'}
-          description={
-            locale === 'th'
-              ? 'เมื่อมีการส่งผลงานเข้าตรวจ จะปรากฏในคิวนี้ตามลำดับการส่ง'
-              : 'Pending submissions will appear here in FIFO order.'
-          }
-          icon={<ShieldCheck className="h-12 w-12 text-text-secondary/50" />}
-        />
+      ) : activeTab === 'submissions' ? (
+        submissions.length === 0 ? (
+          <EmptyState
+            title={locale === 'th' ? 'ไม่มีผลงานรอตรวจสอบ' : 'No pending submissions'}
+            description={
+              locale === 'th'
+                ? 'เมื่อมีการส่งผลงานเข้าตรวจ จะปรากฏในคิวนี้ตามลำดับการส่ง'
+                : 'Pending submissions will appear here in FIFO order.'
+            }
+            icon={<ShieldCheck className="h-12 w-12 text-text-secondary/50" />}
+          />
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[960px] text-left text-sm">
+                  <thead className="bg-text-secondary/5 text-text-secondary">
+                    <tr>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ประเภท' : 'Type'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ชื่อผลงาน' : 'Submission'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ผู้ส่ง' : 'Submitter'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'วันที่ส่ง' : 'Submitted'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ผู้รับผิดชอบ' : 'Assignee'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'Risk flags' : 'Risk flags'}</th>
+                      <th className="px-6 py-4 font-semibold text-right">{locale === 'th' ? 'เปิดรีวิว' : 'Open review'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-text-secondary/10">
+                    {submissions.map((sub) => (
+                      <tr key={`${sub.type}-${sub.id}`} className="hover:bg-text-secondary/5 transition-colors">
+                        <td className="px-6 py-4">
+                          <Badge variant={sub.type === 'software' ? 'info' : sub.type === 'review' ? 'warning' : 'default'}>
+                            {sub.type}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-text-primary">{sub.title}</div>
+                          <div className="mt-1 text-xs text-text-secondary">{sub.slug}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-text-primary">{sub.submitterName}</div>
+                          <div className="mt-1 text-xs text-text-secondary">{sub.submitterId}</div>
+                        </td>
+                        <td className="px-6 py-4 text-text-secondary">
+                          <div className="inline-flex items-center gap-2">
+                            <CalendarRange className="h-4 w-4" />
+                            {sub.updatedAtIso
+                              ? new Date(sub.updatedAtIso).toLocaleString(locale === 'th' ? 'th-TH' : 'en-US')
+                              : 'Unknown'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-text-secondary">
+                          {sub.assignedModeratorId || (locale === 'th' ? 'ยังไม่กำหนด' : 'Unassigned')}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-wrap gap-2">
+                            {sub.riskFlags?.length ? (
+                              sub.riskFlags.map((flag: string) => (
+                                <Badge key={flag} variant="warning">{flag}</Badge>
+                              ))
+                            ) : (
+                              <span className="text-text-secondary">{locale === 'th' ? 'ไม่มี' : 'None'}</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Button
+                            variant="secondary"
+                            onClick={() => router.push(`/dashboard/moderation/${sub.type}/${sub.id}`)}
+                          >
+                            {locale === 'th' ? 'ตรวจสอบ' : 'Review'}
+                            <ChevronRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )
       ) : (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[960px] text-left text-sm">
-                <thead className="bg-text-secondary/5 text-text-secondary">
-                  <tr>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ประเภท' : 'Type'}</th>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ชื่อผลงาน' : 'Submission'}</th>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ผู้ส่ง' : 'Submitter'}</th>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'วันที่ส่ง' : 'Submitted'}</th>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ผู้รับผิดชอบ' : 'Assignee'}</th>
-                    <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'Risk flags' : 'Risk flags'}</th>
-                    <th className="px-6 py-4 font-semibold text-right">{locale === 'th' ? 'เปิดรีวิว' : 'Open review'}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-text-secondary/10">
-                  {submissions.map((sub) => (
-                    <tr key={`${sub.type}-${sub.id}`} className="hover:bg-text-secondary/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <Badge variant={sub.type === 'software' ? 'info' : sub.type === 'review' ? 'warning' : 'default'}>
-                          {sub.type}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-text-primary">{sub.title}</div>
-                        <div className="mt-1 text-xs text-text-secondary">{sub.slug}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-text-primary">{sub.submitterName}</div>
-                        <div className="mt-1 text-xs text-text-secondary">{sub.submitterId}</div>
-                      </td>
-                      <td className="px-6 py-4 text-text-secondary">
-                        <div className="inline-flex items-center gap-2">
-                          <CalendarRange className="h-4 w-4" />
-                          {sub.updatedAtIso
-                            ? new Date(sub.updatedAtIso).toLocaleString(locale === 'th' ? 'th-TH' : 'en-US')
-                            : 'Unknown'}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-text-secondary">
-                        {sub.assignedModeratorId || (locale === 'th' ? 'ยังไม่กำหนด' : 'Unassigned')}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-wrap gap-2">
-                          {sub.riskFlags?.length ? (
-                            sub.riskFlags.map((flag: string) => (
-                              <Badge key={flag} variant="warning">{flag}</Badge>
-                            ))
-                          ) : (
-                            <span className="text-text-secondary">{locale === 'th' ? 'ไม่มี' : 'None'}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          variant="secondary"
-                          onClick={() => router.push(`/dashboard/moderation/${sub.type}/${sub.id}`)}
-                        >
-                          {locale === 'th' ? 'ตรวจสอบ' : 'Review'}
-                          <ChevronRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </td>
+        reports.length === 0 ? (
+          <EmptyState
+            title={locale === 'th' ? 'ไม่มีรายงาน' : 'No reports'}
+            description={
+              locale === 'th'
+                ? 'ไม่มีรายงานปัญหาเนื้อหาในขณะนี้'
+                : 'No content reports reported yet.'
+            }
+            icon={<ShieldCheck className="h-12 w-12 text-text-secondary/50" />}
+          />
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[960px] text-left text-sm">
+                  <thead className="bg-text-secondary/5 text-text-secondary">
+                    <tr>
+                      <th className="px-6 py-4 font-semibold">ประเภท</th>
+                      <th className="px-6 py-4 font-semibold">Target ID</th>
+                      <th className="px-6 py-4 font-semibold">เหตุผล</th>
+                      <th className="px-6 py-4 font-semibold">วันที่</th>
+                      <th className="px-6 py-4 font-semibold">สถานะ</th>
+                      <th className="px-6 py-4 font-semibold text-right">จัดการ</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      ) : activeTab === 'reports' && reports.length > 0 ? (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[960px] text-left text-sm">
-                <thead className="bg-text-secondary/5 text-text-secondary">
-                  <tr>
-                    <th className="px-6 py-4 font-semibold">ประเภท</th>
-                    <th className="px-6 py-4 font-semibold">Target ID</th>
-                    <th className="px-6 py-4 font-semibold">เหตุผล</th>
-                    <th className="px-6 py-4 font-semibold">วันที่</th>
-                    <th className="px-6 py-4 font-semibold">สถานะ</th>
-                    <th className="px-6 py-4 font-semibold text-right">จัดการ</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-text-secondary/10">
-                  {reports.map((report) => (
-                    <tr key={report.id} className="hover:bg-text-secondary/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <Badge variant="warning">{report.targetType}</Badge>
-                      </td>
-                      <td className="px-6 py-4 font-mono text-xs">{report.targetId}</td>
-                      <td className="px-6 py-4">
-                        <div className="font-semibold">{report.reasonCode}</div>
-                        <div className="text-xs text-text-secondary truncate max-w-[200px]">{report.details}</div>
-                      </td>
-                      <td className="px-6 py-4 text-text-secondary">
-                        {report.createdAt ? new Date(report.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge variant={report.status === 'pending' ? 'default' : 'info'}>{report.status}</Badge>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button variant="secondary" size="sm">จัดการ</Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
+                  </thead>
+                  <tbody className="divide-y divide-text-secondary/10">
+                    {reports.map((report) => (
+                      <tr key={report.id} className="hover:bg-text-secondary/5 transition-colors">
+                        <td className="px-6 py-4">
+                          <Badge variant="warning">{report.targetType}</Badge>
+                        </td>
+                        <td className="px-6 py-4 font-mono text-xs">{report.targetId}</td>
+                        <td className="px-6 py-4">
+                          <div className="font-semibold">{report.reasonCode}</div>
+                          <div className="text-xs text-text-secondary truncate max-w-[200px]">{report.details}</div>
+                        </td>
+                        <td className="px-6 py-4 text-text-secondary">
+                          {report.createdAt ? new Date(report.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant={report.status === 'pending' ? 'default' : 'info'}>{report.status}</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Button variant="secondary" size="sm">จัดการ</Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      )}
 
       {nextCursor && !loading && !error ? (
         <div className="flex justify-center">

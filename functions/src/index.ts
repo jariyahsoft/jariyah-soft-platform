@@ -16,3 +16,9 @@ export * as moderation from './moderation';
 // Export all Notification functions
 export * as notifications from './notifications';
 
+// Export all Social functions
+export * as social from './social';
+
+// Export all Reputation & Trending functions
+export * as reputation from './reputation';
+

@@ -1,4 +1,4 @@
-import { onDocumentUpdated, onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import * as admin from 'firebase-admin';
 

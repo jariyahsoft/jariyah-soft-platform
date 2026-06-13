@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { collection, query, where, onSnapshot, orderBy, updateDoc, doc, getDocs, writeBatch } from 'firebase/firestore';
-import { db } from '@/lib/firebase/client';
+import { db } from '@/lib/firebase/config';
 import { Button } from '@/components/ui/Button';
 
 export default function NotificationsPage() {

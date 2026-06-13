@@ -6,7 +6,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/hooks/useAuth';
-import { Toast } from '@/components/ui/Toast'; // Assuming there is a Toast, else we use alert
+
 
 interface ReportButtonProps {
   targetType: 'software' | 'article' | 'comment' | 'review';
