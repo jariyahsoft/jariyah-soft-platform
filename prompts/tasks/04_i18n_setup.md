@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Translation + config ตรงไปตรงมา |
 | Gemini | Flash 3.5 | low | JSON translation files ง่าย |
 | GPT | 5.4-mini | low | เพียงพอสำหรับ i18n setup |
+| Budget | DeepSeek V4 Flash | — | Translation + config งานตรงไปตรงมา |
 
 ## Context Files
 Read these before starting:

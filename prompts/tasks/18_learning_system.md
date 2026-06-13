@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Answer key ห้ามหลุด client + certificate logic |
 | Gemini | **Pro 3.1** | high | Quiz grading + prerequisite chain ซับซ้อน |
 | GPT | **5.5** | medium | Server-side security + PDF generation |
+| Budget | MiniMax M3 | — | Quiz grading + certificate ต้อง reasoning สูง |
 
 ## Context Files
 - ai/06-backlog.md (US-501 เรียนและทำแบบทดสอบ)

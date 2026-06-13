@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Aggregate logic ไม่ซับซ้อนเกิน |
 | Gemini | Flash 3.5 | high | Transaction + aggregate ต้องถูกต้อง |
 | GPT | 5.4 | medium | Review system เป็น standard pattern |
+| Budget | DeepSeek V4 Pro | — | Review system เป็น standard ใช้ Pro เพียงพอ |
 
 ## Context Files
 - ai/06-backlog.md (US-011 ให้คะแนนและรีวิว)

@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Auth/security ต้อง reasoning สูง ป้องกันช่องโหว่ |
 | Gemini | **Pro 3.1** | high | OAuth + Custom Claims ต้องแม่นยำสูง |
 | GPT | **5.5** | medium | Security-critical code ต้อง model ระดับสูง |
+| Budget | MiniMax M3 | — | Auth/security reasoning สูง ราคาประหยัดกว่า Opus |
 
 ## Context Files
 Read these before starting:

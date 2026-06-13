@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Middleware chain + security logic ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | Auth + validation ต้องไม่มีช่องโหว่ |
 | GPT | **5.5** | medium | API security patterns ต้องแม่นยำ |
+| Budget | MiniMax M3 | — | Middleware + security ต้อง reasoning ดี ราคาถูกกว่า |
 
 ## Context Files
 Read these before starting:

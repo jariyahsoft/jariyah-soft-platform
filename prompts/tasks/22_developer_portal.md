@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Profile pages เป็น standard pattern |
 | Gemini | Flash 3.5 | high | Slug redirect + portfolio assembly |
 | GPT | 5.4 | medium | Profile CRUD + upload ทำได้ดี |
+| Budget | DeepSeek V4 Pro | — | Profile CRUD + slug redirect ใช้ Pro คุ้มค่า |
 
 ## Context Files
 - ai/06-backlog.md (US-103 จัดการ Developer Profile)

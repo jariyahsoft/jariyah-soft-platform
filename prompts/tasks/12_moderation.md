@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Transaction + self-approval prevention ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | Workflow state machine ซับซ้อน |
 | GPT | **5.5** | medium | Audit + notification chain ต้องแม่นยำ |
+| Budget | MiniMax M3 | — | Transaction + audit trail ต้อง reasoning สูง |
 
 ## Context Files
 Read these before starting:

@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | CRUD + upload เป็น standard pattern |
 | Gemini | Flash 3.5 | high | หลายหน้า + upload logic ต้อง consistent |
 | GPT | 5.4 | medium | Full-stack CRUD ทำได้ดี |
+| Budget | DeepSeek V4 Pro | — | CRUD + upload pattern ใช้ Pro เพียงพอ |
 
 ## Context Files
 Read these before starting:

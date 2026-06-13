@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Security Rules test ต้อง reasoning ทุก allow/deny path |
 | Gemini | **Pro 3.1** | high | ต้องเข้าใจ business logic ทั้งระบบ |
 | GPT | **5.5** | medium | Test coverage ต้องครอบคลุม edge cases |
+| Budget | MiniMax M3 | — | Test ครอบคลุมทุก pattern ต้อง reasoning ดี |
 
 ## Context Files
 Read these before starting:

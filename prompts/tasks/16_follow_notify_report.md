@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Multi-system integration แต่แยก concern ชัด |
 | Gemini | **Pro 3.1** | low | Notification dedup + report workflow ซับซ้อน |
 | GPT | 5.4 | high | 3 features รวมกันต้อง thinking สูงขึ้น |
+| Budget | MiniMax M3 | — | 3 ระบบรวม ต้อง reasoning ดี ราคาถูกกว่า |
 
 ## Context Files
 - ai/06-backlog.md (US-012 ติดตาม, US-013 ความคิดเห็นและรายงาน)

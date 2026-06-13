@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Landing page เป็น UI standard |
 | Gemini | Flash 3.5 | mid | Component assembly + SEO |
 | GPT | 5.4 | low | UI generation เป็นจุดแข็ง |
+| Budget | DeepSeek V4 Flash | — | UI component + SEO งานมาตรฐาน |
 
 ## Context Files
 Read these before starting:

@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Config generation ไม่ต้อง reasoning สูง |
 | Gemini | Flash 3.5 | low | Boilerplate scaffolding ตรงไปตรงมา |
 | GPT | 5.4-mini | low | เพียงพอสำหรับ project init + config |
+| Budget | DeepSeek V4 Flash | — | Config + scaffolding ราคาประหยัดสุด |
 
 ## Context Files
 Read these before starting:

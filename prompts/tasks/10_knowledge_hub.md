@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Markdown rendering เป็น standard |
 | Gemini | Flash 3.5 | mid | Pattern คล้าย Software Hub |
 | GPT | 5.4 | low | Article CRUD ไม่ซับซ้อน |
+| Budget | DeepSeek V4 Pro | — | Article CRUD + Markdown ใช้ Pro คุ้มค่า |
 
 ## Context Files
 Read these before starting:

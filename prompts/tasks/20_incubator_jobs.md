@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | CRUD + matching เป็น standard |
 | Gemini | Flash 3.5 | high | หลาย feature แต่ pattern คล้ายกัน |
 | GPT | 5.4 | medium | Multi-page CRUD ทำได้ดี |
+| Budget | DeepSeek V4 Pro | — | Multi-page CRUD ใช้ Pro เพียงพอ |
 
 ## Context Files
 - ai/06-backlog.md (US-701, US-702)

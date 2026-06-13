@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Sync logic + retry + reconciliation ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | Thai tokenizer + ranking formula ซับซ้อน |
 | GPT | **5.5** | medium | Search infrastructure ต้อง model ระดับสูง |
+| Budget | MiniMax M3 | — | Sync + reconciliation logic ต้อง reasoning ดี |
 
 ## Context Files
 Read these before starting:

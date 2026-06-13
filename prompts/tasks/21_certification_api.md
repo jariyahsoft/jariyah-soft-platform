@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Key hashing + security design ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | API key auth + rate limit tier ซับซ้อน |
 | GPT | **5.5** | medium | Security + OpenAPI spec generation |
+| Budget | MiniMax M3 | — | Key hashing + security design ต้อง reasoning สูง |
 
 ## Context Files
 - ai/00-project-overview.md (Software Certification levels, Public API)

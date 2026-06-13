@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | UI component generation ทำได้ดี |
 | Gemini | Flash 3.5 | high | Component หลายตัว ต้อง consistency |
 | GPT | 5.4 | medium | UI code generation เป็นจุดแข็ง |
+| Budget | DeepSeek V4 Pro | — | Component generation หลายตัว คุ้มค่า |
 
 ## Context Files
 Read these before starting:

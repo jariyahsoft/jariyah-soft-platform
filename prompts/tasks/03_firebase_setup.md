@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Copy rules จาก context file, config ตรงไปตรงมา |
 | Gemini | Flash 3.5 | mid | Rules syntax ต้องแม่นยำ |
 | GPT | 5.4-mini | medium | Firebase config + rules ไม่ซับซ้อนมาก |
+| Budget | DeepSeek V4 Pro | — | Rules syntax ต้องแม่นยำ ใช้ Pro คุ้มกว่า |
 
 ## Context Files
 Read these before starting:

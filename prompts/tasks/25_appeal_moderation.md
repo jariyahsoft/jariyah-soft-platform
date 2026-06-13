@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Conflict logic + SLA enforcement ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | Workflow state machine + auto-escalation |
 | GPT | **5.5** | medium | Appeal + takedown business rules ซับซ้อน |
+| Budget | MiniMax M3 | — | Conflict check + SLA ต้อง reasoning สูง |
 
 ## Context Files
 - ai/06-backlog.md (US-201, US-202 moderation details)

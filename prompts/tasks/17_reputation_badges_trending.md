@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | Algorithm ไม่ซับซ้อนมาก |
 | Gemini | Flash 3.5 | high | Trending formula + badge criteria |
 | GPT | 5.4 | medium | Algorithm implementation ทำได้ดี |
+| Budget | DeepSeek V4 Pro | — | Algorithm ไม่ซับซ้อนมาก ใช้ Pro คุ้มค่า |
 
 ## Context Files
 - ai/00-project-overview.md (Badge/Reputation/Ranking section)

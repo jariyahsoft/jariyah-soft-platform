@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | Race condition prevention ต้อง reasoning สูง |
 | Gemini | **Pro 3.1** | high | Transaction + waitlist state machine |
 | GPT | 5.4 | high | Capacity logic ต้อง thinking สูงขึ้น |
+| Budget | MiniMax M3 | — | Capacity transaction + waitlist ต้อง reasoning ดี |
 
 ## Context Files
 - ai/06-backlog.md (US-601 สมัครกิจกรรม)

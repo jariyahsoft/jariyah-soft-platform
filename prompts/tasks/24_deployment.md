@@ -8,6 +8,7 @@
 | Claude | Sonnet 4.6 | — | CI/CD YAML เป็น standard pattern |
 | Gemini | Flash 3.5 | high | Multi-env + rollback ต้อง consistent |
 | GPT | 5.4 | medium | GitHub Actions generation ทำได้ดี |
+| Budget | DeepSeek V4 Pro | — | CI/CD YAML + config ใช้ Pro เพียงพอ |
 
 ## Context Files
 - ai/01-architecture.md (Environments, hosting)

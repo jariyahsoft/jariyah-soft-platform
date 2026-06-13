@@ -8,6 +8,7 @@
 | Claude | **Opus 4.6** | — | PDPA + reconciliation + self-protection logic ซับซ้อนสูงสุด |
 | Gemini | **Pro 3.1** | high | Auth/Firestore atomic sync + anonymization |
 | GPT | **5.5** | high | Legal compliance + data lifecycle ต้อง thinking สูงสุด |
+| Budget | MiniMax M3 | — | PDPA + reconciliation ซับซ้อนสูงสุด ต้อง M3 |
 
 ## Context Files
 - ai/06-backlog.md (US-301, US-302, US-303, US-014)
