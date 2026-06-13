@@ -12,3 +12,7 @@ export * as search from './search';
 
 // Export all Moderation functions
 export * as moderation from './moderation';
+
+// Export all Notification functions
+export * as notifications from './notifications';
+

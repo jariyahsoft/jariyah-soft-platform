@@ -28,6 +28,8 @@ export default function ModerationDashboard() {
   const [dateTo, setDateTo] = useState('');
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [activeTab, setActiveTab] = useState<'submissions' | 'reports'>('submissions');
+  const [reports, setReports] = useState<any[]>([]);
 
   useEffect(() => {
     if (!authLoading && !isAtLeast('moderator')) {
@@ -81,8 +83,34 @@ export default function ModerationDashboard() {
 
   useEffect(() => {
     if (!isAtLeast('moderator')) return;
-    void fetchSubmissions();
-  }, [isAtLeast, typeFilter, assigneeFilter, dateFrom, dateTo]);
+    if (activeTab === 'submissions') {
+      void fetchSubmissions();
+    } else {
+      fetchReports();
+    }
+  }, [isAtLeast, typeFilter, assigneeFilter, dateFrom, dateTo, activeTab]);
+
+  async function fetchReports() {
+    try {
+      setLoading(true);
+      const { db } = await import('@/lib/firebase/client');
+      const { collection, query, orderBy, getDocs, limit, where } = await import('firebase/firestore');
+      
+      let q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'), limit(20));
+      if (typeFilter && typeFilter !== 'all') {
+        q = query(q, where('targetType', '==', typeFilter));
+      }
+      
+      const snap = await getDocs(q);
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setReports(items);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      setError('Failed to fetch reports');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const riskCount = useMemo(
     () => submissions.reduce((sum, item) => sum + (Array.isArray(item.riskFlags) ? item.riskFlags.length : 0), 0),
@@ -123,6 +151,21 @@ export default function ModerationDashboard() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
+        <button
+          className={`py-2 px-4 font-semibold text-sm focus:outline-none ${activeTab === 'submissions' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          onClick={() => setActiveTab('submissions')}
+        >
+          {locale === 'th' ? 'ผลงานรอตรวจสอบ' : 'Submissions'}
+        </button>
+        <button
+          className={`py-2 px-4 font-semibold text-sm focus:outline-none ${activeTab === 'reports' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          onClick={() => setActiveTab('reports')}
+        >
+          {locale === 'th' ? 'รายงาน' : 'Reports'}
+        </button>
       </div>
 
       <Card>
@@ -260,7 +303,49 @@ export default function ModerationDashboard() {
             </div>
           </CardContent>
         </Card>
-      )}
+      ) : activeTab === 'reports' && reports.length > 0 ? (
+        <Card>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[960px] text-left text-sm">
+                <thead className="bg-text-secondary/5 text-text-secondary">
+                  <tr>
+                    <th className="px-6 py-4 font-semibold">ประเภท</th>
+                    <th className="px-6 py-4 font-semibold">Target ID</th>
+                    <th className="px-6 py-4 font-semibold">เหตุผล</th>
+                    <th className="px-6 py-4 font-semibold">วันที่</th>
+                    <th className="px-6 py-4 font-semibold">สถานะ</th>
+                    <th className="px-6 py-4 font-semibold text-right">จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-text-secondary/10">
+                  {reports.map((report) => (
+                    <tr key={report.id} className="hover:bg-text-secondary/5 transition-colors">
+                      <td className="px-6 py-4">
+                        <Badge variant="warning">{report.targetType}</Badge>
+                      </td>
+                      <td className="px-6 py-4 font-mono text-xs">{report.targetId}</td>
+                      <td className="px-6 py-4">
+                        <div className="font-semibold">{report.reasonCode}</div>
+                        <div className="text-xs text-text-secondary truncate max-w-[200px]">{report.details}</div>
+                      </td>
+                      <td className="px-6 py-4 text-text-secondary">
+                        {report.createdAt ? new Date(report.createdAt.seconds * 1000).toLocaleDateString() : 'Unknown'}
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge variant={report.status === 'pending' ? 'default' : 'info'}>{report.status}</Badge>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button variant="secondary" size="sm">จัดการ</Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {nextCursor && !loading && !error ? (
         <div className="flex justify-center">
