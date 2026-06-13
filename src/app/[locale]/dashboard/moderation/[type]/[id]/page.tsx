@@ -391,7 +391,13 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ locale:
                 disabled={actionLoading || isOwnSubmission}
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />
-                {locale === 'th' ? 'อนุมัติและเผยแพร่' : 'Approve and publish'}
+                {type === 'review'
+                  ? locale === 'th'
+                    ? 'อนุมัติรีวิว'
+                    : 'Approve review'
+                  : locale === 'th'
+                    ? 'อนุมัติและเผยแพร่'
+                    : 'Approve and publish'}
               </Button>
               <Button
                 className="w-full"

@@ -8,13 +8,13 @@ export const onAuditLogCreate = onDocumentCreated('audit_logs/{logId}', async (e
   const data = snapshot.data();
   const { action, resourceType, resourceId, reason } = data;
 
-  if (resourceType !== 'software' && resourceType !== 'article') return;
+  if (resourceType !== 'software' && resourceType !== 'article' && resourceType !== 'review') return;
 
   try {
     const db = admin.firestore();
     
     // Fetch the target resource to get the owner/author ID
-    let collectionName = resourceType === 'software' ? 'software' : 'articles';
+    let collectionName = resourceType === 'software' ? 'software' : resourceType === 'article' ? 'articles' : 'reviews';
     const resourceRef = db.collection(collectionName).doc(resourceId);
     const resourceSnap = await resourceRef.get();
 
@@ -24,7 +24,8 @@ export const onAuditLogCreate = onDocumentCreated('audit_logs/{logId}', async (e
     }
 
     const resourceData = resourceSnap.data();
-    const targetUserId = resourceType === 'software' ? resourceData?.ownerId : resourceData?.authorId;
+    const targetUserId =
+      resourceType === 'software' ? resourceData?.ownerId : resourceType === 'article' ? resourceData?.authorId : resourceData?.userId;
 
     if (!targetUserId) {
       console.warn(`No owner/author found for resource ${resourceId}`);
@@ -42,12 +43,28 @@ export const onAuditLogCreate = onDocumentCreated('audit_logs/{logId}', async (e
 
     if (action === 'approve') {
       templateId = `${resourceType}.approved`;
-      subject = `${resourceType === 'software' ? 'ซอฟต์แวร์' : 'บทความ'}ของคุณได้รับอนุมัติแล้ว`;
-      message = `รายการ "${resourceData?.name || resourceData?.title}" ของคุณผ่านการตรวจสอบและเผยแพร่แล้ว`;
+      subject =
+        resourceType === 'software'
+          ? 'ซอฟต์แวร์ของคุณได้รับอนุมัติแล้ว'
+          : resourceType === 'article'
+            ? 'บทความของคุณได้รับอนุมัติแล้ว'
+            : 'รีวิวของคุณได้รับอนุมัติแล้ว';
+      message =
+        resourceType === 'review'
+          ? `รีวิวของคุณสำหรับซอฟต์แวร์ "${resourceData?.softwareId || resourceId}" ผ่านการตรวจสอบแล้ว`
+          : `รายการ "${resourceData?.name || resourceData?.title}" ของคุณผ่านการตรวจสอบและเผยแพร่แล้ว`;
     } else if (action === 'reject') {
       templateId = `${resourceType}.rejected`;
-      subject = `กรุณาแก้ไข${resourceType === 'software' ? 'ซอฟต์แวร์' : 'บทความ'}ที่ส่งตรวจ`;
-      message = `รายการ "${resourceData?.name || resourceData?.title}" ของคุณต้องการการแก้ไข. เหตุผล: ${reason}`;
+      subject =
+        resourceType === 'software'
+          ? 'กรุณาแก้ไขซอฟต์แวร์ที่ส่งตรวจ'
+          : resourceType === 'article'
+            ? 'กรุณาแก้ไขบทความที่ส่งตรวจ'
+            : 'กรุณาแก้ไขรีวิวที่ส่งตรวจ';
+      message =
+        resourceType === 'review'
+          ? `รีวิวของคุณต้องการการแก้ไข เหตุผล: ${reason}`
+          : `รายการ "${resourceData?.name || resourceData?.title}" ของคุณต้องการการแก้ไข. เหตุผล: ${reason}`;
     } else {
       // Other actions (e.g., suspend) could be handled here
       return;

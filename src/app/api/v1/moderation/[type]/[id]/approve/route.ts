@@ -13,7 +13,7 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       return errorResponse(ApiErrors.FORBIDDEN.code, 'Requires moderator role', ApiErrors.FORBIDDEN.status);
     }
 
-    if (type !== 'software' && type !== 'article') {
+    if (type !== 'software' && type !== 'article' && type !== 'review') {
       return errorResponse(ApiErrors.VALIDATION_ERROR.code, 'Invalid type', ApiErrors.VALIDATION_ERROR.status);
     }
 
@@ -29,7 +29,7 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       }
 
       const data = docSnap.data();
-      const ownerId = type === 'software' ? data?.ownerId : data?.authorId;
+      const ownerId = type === 'software' ? data?.ownerId : type === 'article' ? data?.authorId : data?.userId;
 
       if (ownerId === req.user.uid) {
         throw new Error('SELF_APPROVAL');
@@ -40,12 +40,14 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       }
 
       const now = admin.firestore.FieldValue.serverTimestamp();
+      const nextStatus = type === 'review' ? 'approved' : 'published';
+      const moderationStatus = 'approved';
 
       // Update the document
       transaction.update(docRef, {
-        status: 'published',
-        moderationStatus: 'approved',
-        publishedAt: now,
+        status: nextStatus,
+        moderationStatus,
+        ...(type === 'review' ? {} : { publishedAt: now }),
         updatedAt: now,
       });
 
@@ -59,12 +61,12 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
         resourceId: id,
         reason: 'Approved by moderator',
         before: { status: data?.status ?? 'unknown' },
-        after: { status: 'published', moderationStatus: 'approved' },
+        after: { status: nextStatus, moderationStatus },
         requestId,
         timestamp: now,
       });
 
-      return { id: docSnap.id, status: 'published', moderationStatus: 'approved' };
+      return { id: docSnap.id, status: nextStatus, moderationStatus };
     });
 
     return successResponse(result, { requestId });

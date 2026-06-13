@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import { adminDb } from '@/lib/firebase/admin';
 
-export type ModerationResourceType = 'software' | 'article';
+export type ModerationResourceType = 'software' | 'article' | 'review';
 
 type FirestoreTimestampLike =
   | admin.firestore.Timestamp
@@ -11,6 +11,11 @@ type FirestoreTimestampLike =
   | undefined;
 
 interface RawModerationDocument {
+  softwareId?: string;
+  userId?: string;
+  userName?: string;
+  userAvatar?: string;
+  rating?: number;
   name?: string;
   title?: string;
   slug?: string;
@@ -125,16 +130,21 @@ function toMillis(value: FirestoreTimestampLike | string): number {
 }
 
 export function getModerationCollectionName(type: ModerationResourceType) {
-  return type === 'software' ? 'software' : 'articles';
+  if (type === 'software') return 'software';
+  if (type === 'article') return 'articles';
+  return 'reviews';
 }
 
 function getSubmitterId(type: ModerationResourceType, data: RawModerationDocument) {
-  return type === 'software' ? data.ownerId ?? '' : data.authorId ?? '';
+  if (type === 'software') return data.ownerId ?? '';
+  if (type === 'article') return data.authorId ?? '';
+  return data.userId ?? '';
 }
 
 function getSubmitterName(type: ModerationResourceType, data: RawModerationDocument) {
   if (type === 'software') return data.developerName ?? data.ownerId ?? 'Unknown developer';
-  return data.authorName ?? data.authorId ?? 'Unknown author';
+  if (type === 'article') return data.authorName ?? data.authorId ?? 'Unknown author';
+  return data.userName ?? data.userId ?? 'Unknown reviewer';
 }
 
 function decodeCursor(cursor?: string) {
@@ -215,7 +225,10 @@ export function toModerationSubmissionSummary(
   return {
     id: doc.id,
     type,
-    title: data.name ?? data.title ?? 'Untitled submission',
+    title:
+      type === 'review'
+        ? `Review for ${data.softwareId ?? 'software'}`
+        : data.name ?? data.title ?? 'Untitled submission',
     slug: data.slug ?? doc.id,
     submitterId: getSubmitterId(type, data),
     submitterName: getSubmitterName(type, data),
@@ -381,7 +394,7 @@ async function fetchAuditHistory(type: ModerationResourceType, resourceId: strin
 export async function listPendingModerationSubmissions(options: ModerationListOptions = {}) {
   const limit = Math.min(options.limit ?? 20, 100);
   const collections: ModerationResourceType[] =
-    options.type && options.type !== 'all' ? [options.type] : ['software', 'article'];
+    options.type && options.type !== 'all' ? [options.type] : ['software', 'article', 'review'];
 
   const cursor = decodeCursor(options.cursor);
   const allItems: ModerationSubmissionSummary[] = [];
@@ -452,6 +465,7 @@ export async function getModerationDetail(type: ModerationResourceType, id: stri
       : [];
 
   const links = [
+    type === 'review' && data.softwareId ? { label: 'Software', url: `/software/${data.softwareId}` } : null,
     data.repositoryURL ? { label: 'Repository', url: data.repositoryURL } : null,
     data.websiteURL ? { label: 'Website', url: data.websiteURL } : null,
     data.downloadURL ? { label: 'Download', url: data.downloadURL } : null,
@@ -460,7 +474,10 @@ export async function getModerationDetail(type: ModerationResourceType, id: stri
 
   return {
     ...summary,
-    description: data.description ?? data.body ?? data.shortDescription ?? data.excerpt ?? '',
+    description:
+      type === 'review'
+        ? `Rating: ${data.rating ?? 'N/A'}\n\n${data.body ?? ''}`
+        : data.description ?? data.body ?? data.shortDescription ?? data.excerpt ?? '',
     submitterEmail,
     screenshots,
     links,

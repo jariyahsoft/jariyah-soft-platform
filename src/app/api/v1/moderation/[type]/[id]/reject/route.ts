@@ -20,7 +20,7 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       return errorResponse(ApiErrors.VALIDATION_ERROR.code, 'reasonCode and note are required', ApiErrors.VALIDATION_ERROR.status);
     }
 
-    if (type !== 'software' && type !== 'article') {
+    if (type !== 'software' && type !== 'article' && type !== 'review') {
       return errorResponse(ApiErrors.VALIDATION_ERROR.code, 'Invalid type', ApiErrors.VALIDATION_ERROR.status);
     }
 
@@ -36,7 +36,7 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       }
 
       const data = docSnap.data();
-      const ownerId = type === 'software' ? data?.ownerId : data?.authorId;
+      const ownerId = type === 'software' ? data?.ownerId : type === 'article' ? data?.authorId : data?.userId;
 
       if (ownerId === req.user.uid) {
         throw new Error('SELF_APPROVAL');

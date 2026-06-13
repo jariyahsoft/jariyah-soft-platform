@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Code, ExternalLink, Share2, Star } from 'lucide-react';
 import { DownloadButton } from '@/components/software/DownloadButton';
@@ -7,11 +8,12 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { getPublishedSoftwareBySlug } from '@/lib/software/data';
 import { PLATFORM_LABELS } from '@/lib/software/types';
+import { listApprovedReviewsForSoftware } from '@/lib/reviews/data';
 
 export const revalidate = 300;
 
 interface SoftwareDetailPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({ params }: SoftwareDetailPageProps): Promise<Metadata> {
@@ -36,10 +38,13 @@ export async function generateMetadata({ params }: SoftwareDetailPageProps): Pro
 }
 
 export default async function SoftwareDetailPage({ params }: SoftwareDetailPageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const software = await getPublishedSoftwareBySlug(slug);
+  const t = await getTranslations({ locale, namespace: 'software' });
 
   if (!software) notFound();
+
+  const initialReviews = await listApprovedReviewsForSoftware(software.id, { limit: 5, page: 1, sort: 'newest' });
 
   const schema = {
     '@context': 'https://schema.org',
@@ -81,18 +86,21 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="info">{software.categoryName}</Badge>
-                  <Badge variant="success">Published</Badge>
+                  <Badge variant="success">{t('status.published')}</Badge>
                 </div>
                 <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">{software.name}</h1>
-                <p className="mt-2 text-lg text-text-secondary">by {software.developerName}</p>
+                <p className="mt-2 text-lg text-text-secondary">{t('detail.byDeveloper', { name: software.developerName })}</p>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-text-secondary">{software.shortDescription}</p>
                 <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
                   <span className="inline-flex items-center gap-1 font-bold text-text-primary">
                     <Star className="h-5 w-5 fill-warning text-warning" />
-                    {software.ratingAverage.toFixed(1)} ({software.ratingCount} reviews)
+                    {t('reviews.ratingHeadline', {
+                      rating: software.ratingAverage.toFixed(1),
+                      count: software.ratingCount,
+                    })}
                   </span>
-                  <span>{software.downloadCount.toLocaleString()} downloads</span>
-                  {software.latestVersion && <span>Version {software.latestVersion}</span>}
+                  <span>{t('card.downloads', { count: software.downloadCount.toLocaleString() })}</span>
+                  {software.latestVersion && <span>{t('card.version', { version: software.latestVersion })}</span>}
                 </div>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <DownloadButton softwareId={software.id} />
@@ -100,7 +108,7 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
                     <a href={software.repositoryURL} target="_blank" rel="noreferrer">
                       <Button variant="secondary" size="lg">
                         <Code className="mr-2 h-5 w-5" />
-                        GitHub
+                        {t('detail.repository')}
                       </Button>
                     </a>
                   )}
@@ -108,13 +116,13 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
                     <a href={software.websiteURL} target="_blank" rel="noreferrer">
                       <Button variant="outline" size="lg">
                         <ExternalLink className="mr-2 h-5 w-5" />
-                        Website
+                        {t('detail.visitWebsite')}
                       </Button>
                     </a>
                   )}
                   <Button variant="ghost" size="lg">
                     <Share2 className="mr-2 h-5 w-5" />
-                    Share
+                    {t('detail.share')}
                   </Button>
                 </div>
               </div>
@@ -122,10 +130,10 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
           </div>
 
           <aside className="rounded-[2rem] border border-text-secondary/10 bg-bg-card p-6">
-            <h2 className="text-lg font-bold">Release details</h2>
+            <h2 className="text-lg font-bold">{t('detail.releaseDetails')}</h2>
             <dl className="mt-5 space-y-4 text-sm">
               <div>
-                <dt className="font-semibold text-text-secondary">Platforms</dt>
+                <dt className="font-semibold text-text-secondary">{t('detail.platforms')}</dt>
                 <dd className="mt-1 flex flex-wrap gap-2">
                   {software.platforms.map((platform) => (
                     <Badge key={platform}>{PLATFORM_LABELS[platform] ?? platform}</Badge>
@@ -133,25 +141,29 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-text-secondary">License</dt>
+                <dt className="font-semibold text-text-secondary">{t('detail.license')}</dt>
                 <dd className="mt-1 text-text-primary">{software.licenseName}</dd>
               </div>
               <div>
-                <dt className="font-semibold text-text-secondary">Updated</dt>
+                <dt className="font-semibold text-text-secondary">{t('detail.updated')}</dt>
                 <dd className="mt-1 text-text-primary">
-                  {software.updatedAt ? new Date(software.updatedAt).toLocaleDateString() : 'Unknown'}
+                  {software.updatedAt ? new Date(software.updatedAt).toLocaleDateString(locale === 'th' ? 'th-TH' : 'en-US') : t('detail.unknown')}
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-text-secondary">File size</dt>
-                <dd className="mt-1 text-text-primary">{software.fileSize ?? 'Not provided'}</dd>
+                <dt className="font-semibold text-text-secondary">{t('detail.fileSize')}</dt>
+                <dd className="mt-1 text-text-primary">{software.fileSize ?? t('detail.notProvided')}</dd>
               </div>
             </dl>
           </aside>
         </section>
 
         <div className="mt-6">
-          <SoftwareDetailTabs software={software} />
+          <SoftwareDetailTabs
+            software={software}
+            initialReviews={initialReviews.items}
+            initialHasMoreReviews={initialReviews.hasMore}
+          />
         </div>
       </div>
     </main>

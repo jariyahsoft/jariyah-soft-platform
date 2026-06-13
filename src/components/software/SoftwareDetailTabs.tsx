@@ -1,17 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/Badge';
 import { SoftwareItem } from '@/lib/software/types';
+import type { ReviewItem } from '@/lib/reviews/types';
+import { SoftwareReviewsSection } from '@/components/software/SoftwareReviewsSection';
 
 interface SoftwareDetailTabsProps {
   software: SoftwareItem;
+  initialReviews: ReviewItem[];
+  initialHasMoreReviews: boolean;
 }
 
 const tabs = ['overview', 'changelog', 'reviews'] as const;
 
-export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
+export function SoftwareDetailTabs({ software, initialReviews, initialHasMoreReviews }: SoftwareDetailTabsProps) {
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>('overview');
+  const t = useTranslations('software');
 
   return (
     <section className="rounded-3xl border border-text-secondary/10 bg-bg-card p-4 md:p-6">
@@ -27,7 +33,11 @@ export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
                 : 'bg-bg-secondary text-text-secondary hover:text-text-primary'
             }`}
           >
-            {tab === 'changelog' ? 'Features & Changelog' : tab}
+            {tab === 'overview'
+              ? t('detail.overview')
+              : tab === 'changelog'
+                ? t('detail.changelog')
+                : t('detail.reviews')}
           </button>
         ))}
       </div>
@@ -36,11 +46,11 @@ export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold">Overview</h2>
+              <h2 className="text-2xl font-bold">{t('detail.overview')}</h2>
               <p className="mt-3 whitespace-pre-wrap leading-8 text-text-secondary">{software.description}</p>
             </div>
             <div>
-              <h3 className="text-lg font-bold">Screenshots</h3>
+              <h3 className="text-lg font-bold">{t('detail.screenshots')}</h3>
               {software.screenshotPaths.length > 0 ? (
                 <div className="mt-3 grid gap-4 sm:grid-cols-2">
                   {software.screenshotPaths.map((src) => (
@@ -52,7 +62,7 @@ export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
                 </div>
               ) : (
                 <div className="mt-3 rounded-2xl border border-dashed border-text-secondary/20 bg-bg-secondary p-8 text-sm text-text-secondary">
-                  Screenshots will appear here when the developer uploads them.
+                  {t('detail.screenshotsEmpty')}
                 </div>
               )}
             </div>
@@ -62,9 +72,9 @@ export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
         {activeTab === 'changelog' && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-2xl font-bold">Features & Changelog</h2>
+              <h2 className="text-2xl font-bold">{t('detail.changelog')}</h2>
               <p className="mt-3 leading-8 text-text-secondary">
-                {software.releaseNotes ?? 'No changelog has been published yet.'}
+                {software.releaseNotes ?? t('detail.changelogEmpty')}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -77,12 +87,22 @@ export function SoftwareDetailTabs({ software }: SoftwareDetailTabsProps) {
 
         {activeTab === 'reviews' && (
           <div>
-            <h2 className="text-2xl font-bold">Reviews</h2>
+            <h2 className="text-2xl font-bold">{t('detail.reviews')}</h2>
             <p className="mt-3 text-text-secondary">
               {software.ratingCount > 0
-                ? `${software.ratingCount} community reviews contribute to a ${software.ratingAverage.toFixed(1)} average rating.`
-                : 'Reviews are not available yet. Be the first to review once the review flow opens.'}
+                ? t('reviews.summary', {
+                    count: software.ratingCount,
+                    rating: software.ratingAverage.toFixed(1),
+                  })
+                : t('reviews.emptySummary')}
             </p>
+            <div className="mt-6">
+              <SoftwareReviewsSection
+                software={software}
+                initialItems={initialReviews}
+                initialHasMore={initialHasMoreReviews}
+              />
+            </div>
           </div>
         )}
       </div>

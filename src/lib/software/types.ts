@@ -32,6 +32,11 @@ export interface SoftwareItem {
   etag?: string;
 }
 
+export interface SoftwareReviewSummary {
+  ratingAverage: number;
+  ratingCount: number;
+}
+
 export interface SoftwareCategory {
   id: string;
   slug: string;

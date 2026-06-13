@@ -146,6 +146,7 @@ export default function ModerationDashboard() {
               { value: 'all', label: locale === 'th' ? 'ทั้งหมด' : 'All' },
               { value: 'software', label: locale === 'th' ? 'ซอฟต์แวร์' : 'Software' },
               { value: 'article', label: locale === 'th' ? 'บทความ' : 'Article' },
+              { value: 'review', label: locale === 'th' ? 'รีวิว' : 'Review' },
             ]}
           />
           <Input
@@ -209,7 +210,7 @@ export default function ModerationDashboard() {
                   {submissions.map((sub) => (
                     <tr key={`${sub.type}-${sub.id}`} className="hover:bg-text-secondary/5 transition-colors">
                       <td className="px-6 py-4">
-                        <Badge variant={sub.type === 'software' ? 'info' : 'default'}>
+                        <Badge variant={sub.type === 'software' ? 'info' : sub.type === 'review' ? 'warning' : 'default'}>
                           {sub.type}
                         </Badge>
                       </td>
