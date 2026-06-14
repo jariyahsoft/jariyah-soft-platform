@@ -2,11 +2,12 @@
 
 import { ChangeEvent, DragEvent, useEffect, useState, useTransition } from 'react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { doc, getDoc } from 'firebase/firestore';
 import { AlertCircle, CheckCircle2, ImagePlus, Save, Send, UploadCloud } from 'lucide-react';
 import { useRouter } from '@/i18n/routing';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
-import { storage } from '@/lib/firebase/config';
+import { db, storage } from '@/lib/firebase/config';
 import { slugify } from '@/lib/utils/slug';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -92,6 +93,7 @@ export function SoftwareSubmissionForm({ mode = 'create', initialSoftware }: Sof
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [dirty, setDirty] = useState(false);
+  const [githubUsername, setGithubUsername] = useState('');
 
   useEffect(() => {
     if (!dirty || !user) return;
@@ -102,6 +104,30 @@ export function SoftwareSubmissionForm({ mode = 'create', initialSoftware }: Sof
 
     return () => window.clearInterval(timer);
   }, [dirty, user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+
+    const loadDeveloperProfile = async () => {
+      try {
+        const developerDoc = await getDoc(doc(db, 'developers', user.uid));
+        if (!cancelled) {
+          const data = developerDoc.data();
+          setGithubUsername(data?.githubUsername || '');
+        }
+      } catch (err) {
+        console.error('Failed to load developer profile for GitHub suggestions', err);
+      }
+    };
+
+    void loadDeveloperProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -258,6 +284,14 @@ export function SoftwareSubmissionForm({ mode = 'create', initialSoftware }: Sof
   }
 
   const canEdit = !initialSoftware || initialSoftware.status === 'draft' || initialSoftware.status === 'rejected';
+  const normalizedGithubUsername = githubUsername.trim().replace(/^@/, '').toLowerCase();
+  const repositorySuggestions = normalizedGithubUsername
+    ? [
+        form.name ? `https://github.com/${normalizedGithubUsername}/${slugify(form.name)}` : '',
+        form.slug ? `https://github.com/${normalizedGithubUsername}/${slugify(form.slug)}` : '',
+        `https://github.com/${normalizedGithubUsername}/${slugify(form.name || 'software')}`,
+      ].filter(Boolean)
+    : [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -383,6 +417,39 @@ export function SoftwareSubmissionForm({ mode = 'create', initialSoftware }: Sof
             <Input label="Download URL" type="url" value={form.downloadURL} disabled={!canEdit} onChange={(e) => updateField('downloadURL', e.target.value)} placeholder="https://..." />
             <Input label="File size" value={form.fileSize} disabled={!canEdit} onChange={(e) => updateField('fileSize', e.target.value)} placeholder="48 MB or Web app" />
           </div>
+
+          {repositorySuggestions.length > 0 && (
+            <div className="rounded-2xl border border-text-secondary/10 bg-bg-secondary p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+                    GitHub repository suggestions
+                  </p>
+                  <p className="mt-1 text-xs text-text-secondary">
+                    {githubUsername
+                      ? `Based on @${normalizedGithubUsername}`
+                      : 'Sign in with GitHub to unlock repository suggestions.'}
+                  </p>
+                </div>
+                <Badge variant="info" size="sm">
+                  Autocomplete
+                </Badge>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {repositorySuggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    type="button"
+                    disabled={!canEdit}
+                    onClick={() => updateField('repositoryURL', suggestion)}
+                    className="inline-flex items-center gap-1 rounded-full border border-text-secondary/10 bg-bg-card px-3 py-1 text-xs font-semibold text-text-primary transition-colors hover:border-accent/25 hover:text-accent disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {suggestion.replace(/^https:\/\/github\.com\//, '')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <aside className="space-y-5">

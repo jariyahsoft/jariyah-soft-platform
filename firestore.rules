@@ -130,6 +130,16 @@ service cloud.firestore {
       allow write: if isModerator(); // Moderators can award/revoke certifications
     }
 
+    match /developers/{uid} {
+      allow read: if true;
+      allow write: if false; // Only via API
+    }
+
+    match /developer_slug_redirects/{oldSlug} {
+      allow read: if true;
+      allow write: if false; // Only via API
+    }
+
     match /{serverOnlyCollection}/{id} {
       allow read, write: if false;
     }
