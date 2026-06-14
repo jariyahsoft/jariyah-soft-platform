@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useLocale } from 'next-intl';
 import { useAuth } from '@/hooks/useAuth';
-import { LayoutDashboard, User, Settings, FolderKanban, Menu, X, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, User, Settings, FolderKanban, Menu, X, ArrowLeft, Shield, Users, BarChart3 } from 'lucide-react';
 
 interface SidebarNavItem {
   href: string;
@@ -40,8 +40,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       icon: <User className="h-4.5 w-4.5" />,
     },
     {
-      href: '/dashboard/settings',
-      label: { th: 'ตั้งค่าการใช้งาน', en: 'Settings' },
+      href: '/dashboard/settings/privacy',
+      label: { th: 'ข้อมูลส่วนบุคคล', en: 'Privacy' },
       icon: <Settings className="h-4.5 w-4.5" />,
     },
   ];
@@ -55,6 +55,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   ] : [];
 
   const adminItems: SidebarNavItem[] = isAtLeast('admin') ? [
+    {
+      href: '/dashboard/admin',
+      label: { th: 'ตั้งค่าระบบ', en: 'Admin Settings' },
+      icon: <Shield className="h-4.5 w-4.5" />,
+    },
+    {
+      href: '/dashboard/admin/users',
+      label: { th: 'จัดการผู้ใช้', en: 'Users' },
+      icon: <Users className="h-4.5 w-4.5" />,
+    },
+    {
+      href: '/dashboard/admin/analytics',
+      label: { th: 'สถิติระบบ', en: 'Analytics' },
+      icon: <BarChart3 className="h-4.5 w-4.5" />,
+    },
     {
       href: '/dashboard/admin/audit',
       label: { th: 'ประวัติการใช้งาน (Audit)', en: 'Audit Logs' },

@@ -33,3 +33,9 @@ export * as jobs from './jobs';
 
 // Export all Certification functions
 export * as certification from './certification';
+
+// Export Admin maintenance functions
+export * as adminMaintenance from './admin/reconciliation';
+
+// Export Privacy / PDPA functions
+export * as privacy from './privacy';

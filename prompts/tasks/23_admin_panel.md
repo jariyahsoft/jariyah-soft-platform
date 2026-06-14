@@ -109,15 +109,15 @@
    - Audit logs preserved after deletion
 
 ## Definition of Done
-- [ ] User search + detail + management
-- [ ] Role change with custom claims sync
-- [ ] Suspend/reactivate with token revocation
-- [ ] Self-protection rules (no self-suspend, no remove last admin)
-- [ ] Master data CRUD (categories, tags, badges, licenses)
-- [ ] Optimistic concurrency on settings
-- [ ] PDPA data export workflow
-- [ ] PDPA data deletion with anonymization
-- [ ] Reconciliation checker for claim/data mismatch
+- [x] User search + detail + management
+- [x] Role change with custom claims sync
+- [x] Suspend/reactivate with token revocation
+- [x] Self-protection rules (no self-suspend, no remove last admin)
+- [x] Master data CRUD (categories, tags, badges, licenses)
+- [x] Optimistic concurrency on settings
+- [x] PDPA data export workflow
+- [x] PDPA data deletion with anonymization
+- [x] Reconciliation checker for claim/data mismatch
 
 
 ---
