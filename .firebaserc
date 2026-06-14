@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "jariyah-dev"
+    "default": "jariyah-dev",
+    "staging": "jariyah-staging",
+    "production": "jariyah-prod"
   }
 }

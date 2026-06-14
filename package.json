@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
+    "predeploy:check": "node ./scripts/pre-deploy.mjs",
+    "postdeploy:check": "node ./scripts/post-deploy-check.mjs",
     "seed": "npx tsx scripts/seed/index.ts",
     "seed:dry": "npx tsx scripts/seed/index.ts --dry-run",
     "seed:admin": "npx tsx scripts/seed/bootstrap-admin.ts",

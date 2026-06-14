@@ -1,0 +1,87 @@
+name: Lighthouse
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  lighthouse:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'develop')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.15.x
+
+      - name: Run Lighthouse assertions
+        env:
+          LHCI_BUILD_CONTEXT__CURRENT_HASH: ${{ github.event.workflow_run.head_sha || github.sha }}
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          lhci collect --url="${{ vars.STAGING_BASE_URL }}" --url="${{ vars.STAGING_BASE_URL }}/th" --numberOfRuns=3
+          lhci assert --config=.lighthouserc.json
+          lhci upload --config=.lighthouserc.json > lighthouse-report.txt
+
+      - name: Upload Lighthouse report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: |
+            .lighthouseci
+            lighthouse-report.txt
+
+      - name: Comment Lighthouse result
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('lighthouse-report.txt', 'utf8');
+            const sha = context.payload.workflow_run?.head_sha || context.sha;
+            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: sha,
+            });
+            if (!prs.data.length) {
+              core.info('No PR associated with commit; skipping PR comment.');
+              return;
+            }
+            const issueNumber = prs.data[0].number;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: [
+                '## Lighthouse (staging)',
+                '',
+                'Core Web Vitals assertions:',
+                '- LCP < 2.5s',
+                '- INP < 200ms',
+                '- CLS < 0.1',
+                '',
+                'Upload summary:',
+                '```text',
+                summary.trim(),
+                '```',
+              ].join('\n'),
+            });

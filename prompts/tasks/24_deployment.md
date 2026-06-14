@@ -1,16 +1,18 @@
 # Task 24: Deployment — CI/CD Pipeline, Staging, Production
 
 ## 🤖 Recommended Model
+
 > Complexity: **Medium** — GitHub Actions YAML, multi-env config, health checks
 
-| Group | Model | Thinking | เหตุผล |
-|---|---|---|---|
-| Claude | Sonnet 4.6 | — | CI/CD YAML เป็น standard pattern |
-| Gemini | Flash 3.5 | high | Multi-env + rollback ต้อง consistent |
-| GPT | 5.4 | medium | GitHub Actions generation ทำได้ดี |
-| Budget | DeepSeek V4 Pro | — | CI/CD YAML + config ใช้ Pro เพียงพอ |
+| Group  | Model           | Thinking | เหตุผล                               |
+| ------ | --------------- | -------- | ------------------------------------ |
+| Claude | Sonnet 4.6      | —        | CI/CD YAML เป็น standard pattern     |
+| Gemini | Flash 3.5       | high     | Multi-env + rollback ต้อง consistent |
+| GPT    | 5.4             | medium   | GitHub Actions generation ทำได้ดี    |
+| Budget | DeepSeek V4 Pro | —        | CI/CD YAML + config ใช้ Pro เพียงพอ  |
 
 ## Context Files
+
 - ai/01-architecture.md (Environments, hosting)
 - ai/09-testing-guide.md (CI/CD integration)
 - ai/05-decisions.md (ADR-001 Hosting Platform)
@@ -18,6 +20,7 @@
 ## Phase: ทำได้ตั้งแต่ Task 14 เป็นต้นไป
 
 ## Prerequisites
+
 - Task 14 (Testing) completed
 - Firebase projects created for staging + production
 - GitHub repository set up
@@ -27,6 +30,7 @@
 ### CI/CD Pipeline
 
 1. **Create GitHub Actions workflow** at `.github/workflows/ci.yml`:
+
    ```yaml
    name: CI
    on:
@@ -153,15 +157,16 @@
    - Health check passes post-deploy
 
 ## Definition of Done
-- [ ] CI pipeline: lint, type-check, tests on PR
-- [ ] Staging auto-deploy on develop branch
-- [ ] Production deploy on main branch
-- [ ] Lighthouse CI with Core Web Vitals assertions
-- [ ] Environment configs separated
-- [ ] Firebase multi-project configured
-- [ ] Post-deploy health check
-- [ ] Rollback procedure documented
 
+- [x] CI pipeline: lint, type-check, tests on PR
+- [x] Staging auto-deploy on develop branch
+- [x] Production deploy on main branch
+- [x] Lighthouse CI with Core Web Vitals assertions
+- [x] Environment configs separated
+- [x] Firebase multi-project configured
+- [x] Post-deploy health check
+- [x] Rollback procedure documented
 
 ---
-*Note: You can start a new conversation for the next task to save Context window limits.*
+
+_Note: You can start a new conversation for the next task to save Context window limits._
