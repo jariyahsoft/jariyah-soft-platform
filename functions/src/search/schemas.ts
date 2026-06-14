@@ -47,9 +47,37 @@ export const developerSchema: CollectionCreateSchema = {
   default_sorting_field: 'reputationScore',
 };
 
+export const jobSchema: CollectionCreateSchema = {
+  name: 'jobs',
+  fields: [
+    { name: 'title', type: 'string', locale: 'th' },
+    { name: 'organization', type: 'string', locale: 'th' },
+    { name: 'description', type: 'string', locale: 'th', optional: true },
+    { name: 'jobType', type: 'string', facet: true },
+    { name: 'workMode', type: 'string', facet: true },
+    { name: 'location', type: 'string', facet: true, optional: true },
+    { name: 'skills', type: 'string[]', facet: true },
+    { name: 'publishedAt', type: 'int64' },
+    { name: 'expiresAt', type: 'int64' },
+  ],
+  default_sorting_field: 'publishedAt',
+};
+
+export const incubatorSchema: CollectionCreateSchema = {
+  name: 'incubator_projects',
+  fields: [
+    { name: 'name', type: 'string', locale: 'th' },
+    { name: 'description', type: 'string', locale: 'th', optional: true },
+    { name: 'stage', type: 'string', facet: true },
+    { name: 'skillNeeds', type: 'string[]', facet: true },
+    { name: 'updatedAt', type: 'int64' },
+  ],
+  default_sorting_field: 'updatedAt',
+};
+
 export async function initializeSchemas() {
   const client = getTypesenseAdminClient();
-  const schemas = [softwareSchema, articleSchema, developerSchema];
+  const schemas = [softwareSchema, articleSchema, developerSchema, jobSchema, incubatorSchema];
 
   for (const schema of schemas) {
     try {
@@ -68,3 +96,4 @@ export async function initializeSchemas() {
     }
   }
 }
+

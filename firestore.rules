@@ -90,6 +90,36 @@ service cloud.firestore {
       allow create, delete: if false;
     }
 
+    match /jobs/{id} {
+      allow read: if (resource.data.status == 'published' && resource.data.expiresAt > request.time)
+        || (signedIn() && resource.data.ownerId == request.auth.uid)
+        || isModerator();
+      allow write: if false; // Only via API
+    }
+
+    match /incubator_projects/{id} {
+      allow read: if resource.data.status == 'published'
+        || (signedIn() && resource.data.ownerId == request.auth.uid)
+        || isModerator();
+      allow write: if false; // Only via API
+
+      match /applications/{uid} {
+        allow read: if signedIn() && (
+          request.auth.uid == uid ||
+          request.auth.uid == get(/databases/$(database)/documents/incubator_projects/$(id)).data.ownerId ||
+          isModerator()
+        );
+        allow write: if false; // Only via API
+      }
+    }
+
+    match /mentor_profiles/{uid} {
+      allow read: if resource.data.status == 'active'
+        || (signedIn() && request.auth.uid == uid)
+        || isModerator();
+      allow write: if false; // Only via API
+    }
+
     match /{serverOnlyCollection}/{id} {
       allow read, write: if false;
     }

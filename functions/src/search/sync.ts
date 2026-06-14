@@ -171,3 +171,101 @@ export const onDeveloperWrite = onDocumentWritten(
     }
   }
 );
+
+export const onJobWrite = onDocumentWritten(
+  {
+    document: 'jobs/{jobId}',
+    retry: true,
+  },
+  async (event) => {
+    const client = getTypesenseAdminClient();
+    const jobId = event.params.jobId;
+
+    if (!event.data) return;
+
+    const dataAfter = event.data.after.data();
+    const isPublished = dataAfter && dataAfter.status === 'published';
+
+    if (!isPublished) {
+      try {
+        await client.collections('jobs').documents(jobId).delete();
+        logger.info(`Removed job ${jobId} from index (not published or expired).`);
+      } catch (error: any) {
+        if (error.httpStatus !== 404) {
+          logger.error(`Failed to remove job ${jobId} from index:`, error);
+          throw error;
+        }
+      }
+      return;
+    }
+
+    const doc = {
+      id: jobId,
+      title: String(dataAfter.title ?? ''),
+      organization: String(dataAfter.organization ?? ''),
+      description: String(dataAfter.description ?? ''),
+      jobType: String(dataAfter.jobType ?? ''),
+      workMode: String(dataAfter.workMode ?? ''),
+      location: String(dataAfter.location ?? ''),
+      skills: Array.isArray(dataAfter.skills) ? dataAfter.skills : [],
+      publishedAt: dataAfter.publishedAt ? dataAfter.publishedAt.toMillis() : Date.now(),
+      expiresAt: dataAfter.expiresAt ? dataAfter.expiresAt.toMillis() : Date.now(),
+    };
+
+    try {
+      await client.collections('jobs').documents().upsert(doc);
+      logger.info(`Upserted job ${jobId} to index.`);
+    } catch (error) {
+      logger.error(`Failed to upsert job ${jobId} to index:`, error);
+      throw error;
+    }
+  }
+);
+
+export const onIncubatorWrite = onDocumentWritten(
+  {
+    document: 'incubator_projects/{projectId}',
+    retry: true,
+  },
+  async (event) => {
+    const client = getTypesenseAdminClient();
+    const projectId = event.params.projectId;
+
+    if (!event.data) return;
+
+    const dataAfter = event.data.after.data();
+    // Remove from index when not published or when suspended (within ~60s via trigger)
+    const isIndexable = dataAfter && dataAfter.status === 'published';
+
+    if (!isIndexable) {
+      try {
+        await client.collections('incubator_projects').documents(projectId).delete();
+        logger.info(`Removed incubator project ${projectId} from index (status: ${dataAfter?.status ?? 'deleted'}).`);
+      } catch (error: any) {
+        if (error.httpStatus !== 404) {
+          logger.error(`Failed to remove incubator project ${projectId} from index:`, error);
+          throw error;
+        }
+      }
+      return;
+    }
+
+    const doc = {
+      id: projectId,
+      name: String(dataAfter.name ?? ''),
+      description: String(dataAfter.description ?? ''),
+      stage: String(dataAfter.stage ?? ''),
+      skillNeeds: Array.isArray(dataAfter.skillNeeds) ? dataAfter.skillNeeds : [],
+      updatedAt: dataAfter.updatedAt ? dataAfter.updatedAt.toMillis() : Date.now(),
+    };
+
+    try {
+      await client.collections('incubator_projects').documents().upsert(doc);
+      logger.info(`Upserted incubator project ${projectId} to index.`);
+    } catch (error) {
+      logger.error(`Failed to upsert incubator project ${projectId} to index:`, error);
+      throw error;
+    }
+  }
+);
+

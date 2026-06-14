@@ -28,3 +28,6 @@ export * as learning from './learning';
 // Export all Event functions
 export * as events from './events';
 
+// Export all Job functions
+export * as jobs from './jobs';
+

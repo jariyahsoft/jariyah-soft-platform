@@ -80,6 +80,28 @@ export interface DeveloperDocument {
   reputationScore: number;
 }
 
+export interface JobDocument {
+  id: string;
+  title: string;
+  organization: string;
+  description: string;
+  jobType: string;
+  workMode: string;
+  location: string;
+  skills: string[];
+  publishedAt: number;
+  expiresAt: number;
+}
+
+export interface IncubatorDocument {
+  id: string;
+  name: string;
+  description: string;
+  stage: string;
+  skillNeeds: string[];
+  updatedAt: number;
+}
+
 export async function syncSoftwareToTypesense(doc: Record<string, unknown>, action: 'upsert' | 'delete') {
   const client = getTypesenseAdminClient();
   const document: SoftwareDocument = {
