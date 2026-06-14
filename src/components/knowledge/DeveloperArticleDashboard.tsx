@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { AppealSubmissionButton } from '@/components/moderation/AppealSubmissionButton';
 import { ArticleItem, ArticleStatus } from '@/lib/articles/types';
 
 const statusTabs: Array<'all' | ArticleStatus> = ['all', 'draft', 'pending', 'published', 'rejected'];
@@ -195,6 +196,9 @@ export function DeveloperArticleDashboard() {
                       <Send className="mr-2 h-4 w-4" />
                       Submit
                     </Button>
+                  )}
+                  {item.status === 'rejected' && (
+                    <AppealSubmissionButton resourceType="article" resourceId={item.id} onSubmitted={loadArticles} />
                   )}
                   {item.status === 'published' && (
                     <Link

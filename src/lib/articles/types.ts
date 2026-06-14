@@ -1,4 +1,4 @@
-export type ArticleStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'suspended' | 'archived';
+export type ArticleStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'hidden' | 'suspended' | 'removed' | 'archived';
 
 export interface ArticleItem {
   id: string;

@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Filter,
   Search,
+  Scale,
   ShieldCheck,
   ShieldOff,
   Sparkles,
@@ -50,8 +51,10 @@ export default function ModerationDashboard() {
   const [dateTo, setDateTo] = useState('');
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [activeTab, setActiveTab] = useState<'submissions' | 'reports' | 'certifications'>('submissions');
+  const [activeTab, setActiveTab] = useState<'submissions' | 'reports' | 'appeals' | 'certifications'>('submissions');
   const [reports, setReports] = useState<any[]>([]);
+  const [appeals, setAppeals] = useState<any[]>([]);
+  const [appealDecisionLoading, setAppealDecisionLoading] = useState<string | null>(null);
 
   // Certifications tab state
   const [certSoftwareList, setCertSoftwareList] = useState<any[]>([]);
@@ -116,6 +119,8 @@ export default function ModerationDashboard() {
       void fetchSubmissions();
     } else if (activeTab === 'reports') {
       fetchReports();
+    } else if (activeTab === 'appeals') {
+      void fetchAppeals();
     } else if (activeTab === 'certifications') {
       void fetchCertSoftware();
     }
@@ -220,6 +225,59 @@ export default function ModerationDashboard() {
     }
   }
 
+  async function fetchAppeals() {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = await getToken();
+      const res = await fetch('/api/v1/moderation/appeals', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Failed to fetch appeals');
+      const data = await res.json();
+      setAppeals(data.data?.items || []);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleAppealDecision(appealId: string, decision: 'overturn' | 'uphold') {
+    const confirmed = window.confirm(
+      decision === 'overturn'
+        ? locale === 'th'
+          ? 'ยืนยันกลับคำตัดสินและส่งเนื้อหากลับเป็น draft?'
+          : 'Overturn this decision and return the content to draft?'
+        : locale === 'th'
+          ? 'ยืนยันยืนตามคำตัดสินเดิม?'
+          : 'Uphold the original decision?'
+    );
+    if (!confirmed) return;
+
+    try {
+      setAppealDecisionLoading(`${appealId}:${decision}`);
+      const token = await getToken();
+      const res = await fetch(`/api/v1/moderation/appeals/${appealId}/decision`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ decision }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error?.message || 'Failed to update appeal');
+      }
+      await fetchAppeals();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setAppealDecisionLoading(null);
+    }
+  }
+
   const riskCount = useMemo(
     () => submissions.reduce((sum, item) => sum + (Array.isArray(item.riskFlags) ? item.riskFlags.length : 0), 0),
     [submissions]
@@ -273,6 +331,15 @@ export default function ModerationDashboard() {
           onClick={() => setActiveTab('reports')}
         >
           {locale === 'th' ? 'รายงาน' : 'Reports'}
+        </button>
+        <button
+          className={`py-2 px-4 font-semibold text-sm focus:outline-none ${activeTab === 'appeals' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          onClick={() => setActiveTab('appeals')}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <Scale className="h-3.5 w-3.5" />
+            {locale === 'th' ? 'อุทธรณ์' : 'Appeals'}
+          </span>
         </button>
         <button
           className={`py-2 px-4 font-semibold text-sm focus:outline-none ${activeTab === 'certifications' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
@@ -467,6 +534,89 @@ export default function ModerationDashboard() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <Button variant="secondary" size="sm">จัดการ</Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      ) : activeTab === 'appeals' ? (
+        appeals.length === 0 ? (
+          <EmptyState
+            title={locale === 'th' ? 'ไม่มีอุทธรณ์รอตรวจ' : 'No pending appeals'}
+            description={
+              locale === 'th'
+                ? 'คำอุทธรณ์จากผู้พัฒนาจะปรากฏที่นี่ และผู้ปฏิเสธเดิมจะไม่สามารถตัดสินเองได้'
+                : 'Developer appeals will appear here. The original rejecting moderator cannot decide them.'
+            }
+            icon={<Scale className="h-12 w-12 text-text-secondary/50" />}
+          />
+        ) : (
+          <Card>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[1100px] text-left text-sm">
+                  <thead className="bg-text-secondary/5 text-text-secondary">
+                    <tr>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'ผลงาน' : 'Submission'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'เหตุผลปฏิเสธ' : 'Rejection'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'คำอุทธรณ์' : 'Appeal reason'}</th>
+                      <th className="px-6 py-4 font-semibold">{locale === 'th' ? 'สถานะ' : 'Status'}</th>
+                      <th className="px-6 py-4 font-semibold text-right">{locale === 'th' ? 'ตัดสิน' : 'Decision'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-text-secondary/10">
+                    {appeals.map((appeal) => (
+                      <tr key={appeal.id} className="hover:bg-text-secondary/5 transition-colors">
+                        <td className="px-6 py-4">
+                          <Badge variant={appeal.resourceType === 'software' ? 'info' : 'default'}>{appeal.resourceType}</Badge>
+                          <div className="mt-2 font-semibold text-text-primary">{appeal.resourceTitle || appeal.resourceId}</div>
+                          <div className="mt-1 text-xs text-text-secondary">{appeal.resourceId}</div>
+                          <div className="mt-1 text-xs text-text-secondary">Original reviewer: {appeal.originalModeratorId || 'unknown'}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-text-primary">{appeal.rejectionReason?.reasonCode || 'N/A'}</div>
+                          <div className="mt-1 max-w-xs whitespace-pre-wrap text-xs text-text-secondary">{appeal.rejectionReason?.note || 'No note'}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="max-w-sm whitespace-pre-wrap text-text-primary">{appeal.appealReason}</div>
+                          {appeal.attachments?.length ? (
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                              {appeal.attachments.map((url: string) => (
+                                <a key={url} href={url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-accent hover:underline">
+                                  Evidence
+                                </a>
+                              ))}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant={appeal.status === 'escalated' ? 'warning' : 'default'}>{appeal.status}</Badge>
+                          <div className="mt-2 text-xs text-text-secondary">
+                            {appeal.createdAt ? new Date(appeal.createdAt).toLocaleString(locale === 'th' ? 'th-TH' : 'en-US') : 'Unknown'}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              size="sm"
+                              loading={appealDecisionLoading === `${appeal.id}:overturn`}
+                              onClick={() => handleAppealDecision(appeal.id, 'overturn')}
+                            >
+                              {locale === 'th' ? 'กลับคำตัดสิน' : 'Overturn'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              loading={appealDecisionLoading === `${appeal.id}:uphold`}
+                              onClick={() => handleAppealDecision(appeal.id, 'uphold')}
+                            >
+                              {locale === 'th' ? 'ยืนยันเดิม' : 'Uphold'}
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

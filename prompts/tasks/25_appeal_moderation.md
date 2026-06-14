@@ -71,14 +71,14 @@
    - Broken link detection working
 
 ## Definition of Done
-- [ ] Appeal submission form
-- [ ] Appeal queue with moderator conflict check
-- [ ] Overturn/Uphold workflow
-- [ ] Auto-escalation after 14 days
-- [ ] Emergency takedown (hide/suspend/remove)
-- [ ] Takedown affects search ≤ 60 seconds
-- [ ] Download link health monitoring
-- [ ] Full audit trail
+- [x] Appeal submission form
+- [x] Appeal queue with moderator conflict check
+- [x] Overturn/Uphold workflow
+- [x] Auto-escalation after 14 days
+- [x] Emergency takedown (hide/suspend/remove)
+- [x] Takedown affects search ≤ 60 seconds
+- [x] Download link health monitoring
+- [x] Full audit trail
 
 
 ---

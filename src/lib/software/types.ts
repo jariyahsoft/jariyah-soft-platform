@@ -1,4 +1,4 @@
-export type SoftwareStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'suspended' | 'archived';
+export type SoftwareStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'hidden' | 'suspended' | 'removed' | 'archived';
 
 export interface SoftwareItem {
   id: string;

@@ -27,6 +27,9 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ locale:
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectReasonCode, setRejectReasonCode] = useState('');
   const [rejectNote, setRejectNote] = useState('');
+  const [takedownAction, setTakedownAction] = useState('hide');
+  const [takedownReasonCode, setTakedownReasonCode] = useState('security_risk');
+  const [takedownNote, setTakedownNote] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
@@ -122,6 +125,51 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ locale:
       }
       
       alert(locale === 'th' ? 'ปฏิเสธสำเร็จ' : 'Rejected successfully');
+      router.push('/dashboard/moderation');
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleEmergencyTakedown = async () => {
+    if (type !== 'software' && type !== 'article') {
+      alert(locale === 'th' ? 'รองรับเฉพาะซอฟต์แวร์และบทความ' : 'Only software and articles can be taken down here.');
+      return;
+    }
+    const confirmed = confirm(
+      locale === 'th'
+        ? 'ยืนยัน emergency takedown? รายการจะถูกซ่อนจาก public และ search ทันที'
+        : 'Confirm emergency takedown? The item will be removed from public views and search immediately.'
+    );
+    if (!confirmed) return;
+
+    setActionLoading(true);
+    try {
+      const auth = (await import('@/lib/firebase/config')).auth;
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch('/api/v1/admin/takedowns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          resourceType: type,
+          resourceId: id,
+          action: takedownAction,
+          reasonCode: takedownReasonCode,
+          note: takedownNote,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.error?.message || 'Failed to apply takedown');
+      }
+
+      alert(locale === 'th' ? 'ดำเนินการ takedown แล้ว' : 'Takedown applied');
       router.push('/dashboard/moderation');
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -419,6 +467,55 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ locale:
               ) : null}
             </CardContent>
           </Card>
+
+          {isAtLeast('admin') && (type === 'software' || type === 'article') ? (
+            <Card className="border-danger/20 bg-danger/5">
+              <CardHeader>
+                <CardTitle>{locale === 'th' ? 'Emergency takedown' : 'Emergency takedown'}</CardTitle>
+                <CardDescription>
+                  {locale === 'th'
+                    ? 'ซ่อน ระงับ หรือนำออกจาก public และ search โดยทันทีสำหรับกรณีเร่งด่วน'
+                    : 'Hide, suspend, or remove this item from public views and search for urgent cases.'}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Select
+                  label={locale === 'th' ? 'Action' : 'Action'}
+                  value={takedownAction}
+                  onChange={(event) => setTakedownAction(event.target.value)}
+                  options={[
+                    { value: 'hide', label: locale === 'th' ? 'Hide' : 'Hide' },
+                    { value: 'suspend', label: locale === 'th' ? 'Suspend' : 'Suspend' },
+                    { value: 'remove', label: locale === 'th' ? 'Remove' : 'Remove' },
+                  ]}
+                />
+                <Select
+                  label={locale === 'th' ? 'Reason' : 'Reason'}
+                  value={takedownReasonCode}
+                  onChange={(event) => setTakedownReasonCode(event.target.value)}
+                  options={[
+                    { value: 'copyright', label: 'Copyright' },
+                    { value: 'trademark', label: 'Trademark' },
+                    { value: 'security_risk', label: 'Security Risk' },
+                    { value: 'malware', label: 'Malware' },
+                  ]}
+                />
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary/80">
+                    {locale === 'th' ? 'Admin note' : 'Admin note'}
+                  </label>
+                  <textarea
+                    value={takedownNote}
+                    onChange={(event) => setTakedownNote(event.target.value)}
+                    className="min-h-20 w-full rounded-lg border border-text-secondary/15 bg-bg-secondary px-3 py-2 text-sm text-text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  />
+                </div>
+                <Button className="w-full" variant="danger" loading={actionLoading} onClick={handleEmergencyTakedown}>
+                  {locale === 'th' ? 'ดำเนินการ takedown' : 'Apply takedown'}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : null}
         </div>
       </div>
 

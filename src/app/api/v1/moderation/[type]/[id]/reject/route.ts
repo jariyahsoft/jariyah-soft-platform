@@ -47,16 +47,17 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
       }
 
       const now = admin.firestore.FieldValue.serverTimestamp();
+      const auditLogRef = adminDb.collection('audit_logs').doc();
 
       // Update the document
       transaction.update(docRef, {
         status: 'rejected',
-        moderationReason: { reasonCode, note, rejectedAt: now, rejectedBy: req.user.uid },
+        moderationReason: { reasonCode, note, rejectedAt: now, rejectedBy: req.user.uid, decisionId: auditLogRef.id },
+        rejectionReason: note,
         updatedAt: now,
       });
 
       // Create Audit Log
-      const auditLogRef = adminDb.collection('audit_logs').doc();
       transaction.set(auditLogRef, {
         actorId: req.user.uid,
         moderatorId: req.user.uid,
@@ -66,7 +67,7 @@ export const POST = withAuth(async (req: any, { params }: { params: Promise<{ ty
         reason: `${reasonCode}: ${note}`,
         note,
         before: { status: data?.status ?? 'unknown' },
-        after: { status: 'rejected', moderationReason: { reasonCode, note } },
+        after: { status: 'rejected', moderationReason: { reasonCode, note, decisionId: auditLogRef.id } },
         requestId,
         timestamp: now,
       });
