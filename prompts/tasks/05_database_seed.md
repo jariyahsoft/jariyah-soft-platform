@@ -5,7 +5,7 @@
 
 | Group | Model | Thinking | เหตุผล |
 |---|---|---|---|
-| Claude | Sonnet 4.6 | — | Script generation ไม่ซับซ้อน |
+| Claude | Haiku 4.5 | — | Script generation ไม่ซับซ้อน ใช้ Haiku 4.5 ได้ |
 | Gemini | Flash 3.5 | mid | ต้องจัดการ batch + idempotent check |
 | GPT | 5.4-mini | medium | Data seeding script ทำได้ดี |
 | Budget | DeepSeek V4 Flash | — | Seed script ไม่ซับซ้อน ประหยัดได้ |

@@ -5,7 +5,7 @@
 
 | Group | Model | Thinking | เหตุผล |
 |---|---|---|---|
-| Claude | Sonnet 4.6 | — | Landing page เป็น UI standard |
+| Claude | Haiku 4.5 | — | Landing page เป็น UI standard ใช้ Haiku 4.5 ได้ |
 | Gemini | Flash 3.5 | mid | Component assembly + SEO |
 | GPT | 5.4 | low | UI generation เป็นจุดแข็ง |
 | Budget | DeepSeek V4 Flash | — | UI component + SEO งานมาตรฐาน |

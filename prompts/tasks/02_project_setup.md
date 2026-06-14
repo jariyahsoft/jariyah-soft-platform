@@ -5,7 +5,7 @@
 
 | Group | Model | Thinking | เหตุผล |
 |---|---|---|---|
-| Claude | Sonnet 4.6 | — | Config generation ไม่ต้อง reasoning สูง |
+| Claude | Haiku 4.5 | — | Config generation ไม่ต้อง reasoning สูง ใช้ Haiku 4.5 ได้ |
 | Gemini | Flash 3.5 | low | Boilerplate scaffolding ตรงไปตรงมา |
 | GPT | 5.4-mini | low | เพียงพอสำหรับ project init + config |
 | Budget | DeepSeek V4 Flash | — | Config + scaffolding ราคาประหยัดสุด |

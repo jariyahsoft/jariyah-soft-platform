@@ -5,7 +5,7 @@
 
 | Group | Model | Thinking | เหตุผล |
 |---|---|---|---|
-| Claude | Sonnet 4.6 | — | Translation + config ตรงไปตรงมา |
+| Claude | Haiku 4.5 | — | Translation + config ตรงไปตรงมา ใช้ Haiku 4.5 ได้ |
 | Gemini | Flash 3.5 | low | JSON translation files ง่าย |
 | GPT | 5.4-mini | low | เพียงพอสำหรับ i18n setup |
 | Budget | DeepSeek V4 Flash | — | Translation + config งานตรงไปตรงมา |
