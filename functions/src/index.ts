@@ -31,3 +31,5 @@ export * as events from './events';
 // Export all Job functions
 export * as jobs from './jobs';
 
+// Export all Certification functions
+export * as certification from './certification';

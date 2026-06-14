@@ -1,0 +1,656 @@
+openapi: '3.1.0'
+info:
+  title: Jariyah Soft Public API
+  version: '1.0.0'
+  description: |
+    REST API for accessing software listings, articles, developer profiles,
+    and managing API keys on the Jariyah Soft platform.
+
+    ## Authentication
+    All read endpoints require an `X-API-Key` header.
+    Management endpoints (API key creation, moderation) require a `Bearer` token.
+
+    ## Rate Limits
+    | Tier    | Requests/min |
+    |---------|-------------|
+    | Free    | 60          |
+    | Basic   | 300         |
+    | Premium | 1000        |
+
+    Rate limit headers are included in every response:
+    - `RateLimit-Limit`
+    - `RateLimit-Remaining`
+    - `RateLimit-Reset`
+
+    ## Pagination
+    All list endpoints use cursor-based pagination via `limit` and `cursor` query parameters.
+    The response `meta.nextCursor` value should be passed as the `cursor` for the next page.
+  contact:
+    name: Jariyah Soft Developer Support
+    url: https://jariyahsoft.com/developers/api
+  license:
+    name: Proprietary
+    url: https://jariyahsoft.com/terms
+
+servers:
+  - url: https://jariyahsoft.com/api/v1
+    description: Production
+  - url: http://localhost:3000/api/v1
+    description: Local development
+
+tags:
+  - name: Software
+    description: Browse and retrieve software listings
+  - name: Articles
+    description: Browse published articles
+  - name: Developers
+    description: Developer profile data
+  - name: API Keys
+    description: Manage your API keys (requires Bearer auth)
+  - name: Moderation
+    description: Certification management (moderator-only)
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'API key in `js_live_` format. Obtain from Dashboard → API Keys.'
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Firebase ID Token
+      description: Firebase Authentication ID token for authenticated operations.
+
+  schemas:
+    PaginationParams:
+      type: object
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+          description: Maximum number of items to return.
+        cursor:
+          type: string
+          nullable: true
+          description: Opaque cursor for the next page, from `meta.nextCursor`.
+
+    Meta:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Unique request identifier for tracing.
+          example: req_a1b2c3d4e5f6
+        nextCursor:
+          type: string
+          nullable: true
+          description: Cursor for the next page, or `null` if no more results.
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, requestId]
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - UNAUTHENTICATED
+                - FORBIDDEN
+                - NOT_FOUND
+                - CONFLICT
+                - RATE_LIMIT_EXCEEDED
+                - BUSINESS_RULE_VIOLATION
+                - INTERNAL_ERROR
+            message:
+              type: string
+            requestId:
+              type: string
+            fields:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  reason:
+                    type: string
+
+    SoftwareSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        developerName:
+          type: string
+        shortDescription:
+          type: string
+        categoryId:
+          type: string
+        categoryName:
+          type: string
+        platforms:
+          type: array
+          items:
+            type: string
+            enum: [windows, mac, web, mobile, linux]
+        ratingAverage:
+          type: number
+          format: float
+        ratingCount:
+          type: integer
+        downloadCount:
+          type: integer
+        certifications:
+          type: array
+          items:
+            type: string
+            enum:
+              - verified
+              - security_checked
+              - editors_choice
+              - open_source_verified
+              - community_recommended
+          description: Active certification badges.
+        logoPath:
+          type: string
+          nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+
+    SoftwareDetail:
+      allOf:
+        - $ref: '#/components/schemas/SoftwareSummary'
+        - type: object
+          properties:
+            description:
+              type: string
+              description: Full markdown description.
+            tagIds:
+              type: array
+              items:
+                type: string
+            licenseId:
+              type: string
+            licenseName:
+              type: string
+            repositoryURL:
+              type: string
+              nullable: true
+            websiteURL:
+              type: string
+              nullable: true
+            downloadURL:
+              type: string
+              nullable: true
+            fileSize:
+              type: string
+              nullable: true
+            latestVersion:
+              type: string
+              nullable: true
+            screenshotPaths:
+              type: array
+              items:
+                type: string
+
+    ArticleSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        authorId:
+          type: string
+        contentType:
+          type: string
+          enum: [markdown]
+        viewCount:
+          type: integer
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    DeveloperProfile:
+      type: object
+      properties:
+        displayName:
+          type: string
+        slug:
+          type: string
+        reputationScore:
+          type: integer
+        verificationStatus:
+          type: string
+          enum: [unverified, pending, verified]
+        followerCount:
+          type: integer
+        badges:
+          type: array
+          items:
+            type: string
+
+    ApiKeyResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        keyPrefix:
+          type: string
+          description: 'First 12 characters (e.g. `js_live_a1b2`). Never the full key.'
+        status:
+          type: string
+          enum: [active, revoked]
+        rateLimitTier:
+          type: string
+          enum: [free, basic, premium]
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        revokedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    ApiKeyCreated:
+      allOf:
+        - $ref: '#/components/schemas/ApiKeyResponse'
+        - type: object
+          required: [apiKey]
+          properties:
+            apiKey:
+              type: string
+              description: |
+                **Returned only once on creation.** Store it securely.
+                Format: `js_live_` + 32 hex characters.
+              example: js_live_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
+
+    CertificationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        softwareId:
+          type: string
+        type:
+          type: string
+          enum:
+            - verified
+            - security_checked
+            - editors_choice
+            - open_source_verified
+            - community_recommended
+        source:
+          type: string
+          enum: [manual, automatic]
+        status:
+          type: string
+          enum: [active, revoked]
+        awardedBy:
+          type: string
+        awardedAt:
+          type: string
+          format: date-time
+
+paths:
+  # ─── Software ───────────────────────────────────────
+  /software:
+    get:
+      operationId: listSoftware
+      tags: [Software]
+      summary: List published software
+      description: Returns a paginated list of published software with optional filtering.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter by category ID.
+          schema:
+            type: string
+        - name: platform
+          in: query
+          description: Filter by platform.
+          schema:
+            type: string
+            enum: [windows, mac, web, mobile, linux]
+        - name: sort
+          in: query
+          description: Sort order.
+          schema:
+            type: string
+            enum: [recency, popularity, relevance]
+            default: recency
+      responses:
+        '200':
+          description: Paginated list of software
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SoftwareSummary'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          description: Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+
+  /software/{id}:
+    get:
+      operationId: getSoftware
+      tags: [Software]
+      summary: Get software details
+      description: Returns full details for a software item by ID or slug.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Software document ID or slug.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Software details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SoftwareDetail'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '404':
+          description: Software not found
+
+  # ─── Articles ───────────────────────────────────────
+  /articles:
+    get:
+      operationId: listArticles
+      tags: [Articles]
+      summary: List published articles
+      description: Returns a paginated list of published articles.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: cursor
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated list of articles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleSummary'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+  # ─── Developers ─────────────────────────────────────
+  /developers/{id}:
+    get:
+      operationId: getDeveloper
+      tags: [Developers]
+      summary: Get developer profile
+      description: Returns the public developer profile including reputation and badges.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Developer UID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Developer profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DeveloperProfile'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '404':
+          description: Developer not found
+
+  # ─── API Keys ───────────────────────────────────────
+  /api-keys:
+    post:
+      operationId: createApiKey
+      tags: [API Keys]
+      summary: Create a new API key
+      description: |
+        Generates a new API key for the authenticated developer.
+        Maximum 5 active keys per account.
+        **The full key is returned only once in the response.**
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 100
+                  description: Human-readable name for the key.
+                  example: Production App
+                expiresInDays:
+                  type: integer
+                  minimum: 1
+                  maximum: 365
+                  description: Optional expiration period in days. Omit for non-expiring key.
+      responses:
+        '201':
+          description: API key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ApiKeyCreated'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '422':
+          description: Maximum active keys reached
+
+    get:
+      operationId: listApiKeys
+      tags: [API Keys]
+      summary: List your API keys
+      description: Returns all API keys for the authenticated developer. Never returns the full key or hash.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKeyResponse'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+  /api-keys/{id}:
+    delete:
+      operationId: revokeApiKey
+      tags: [API Keys]
+      summary: Revoke an API key
+      description: Revokes an API key by setting its status to `revoked`. Only the key owner can revoke.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: API key document ID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Key revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                        enum: [revoked]
+        '404':
+          description: Key not found
+        '403':
+          description: Not the key owner
+
+  # ─── Moderation / Certifications ────────────────────
+  /moderation/certifications:
+    post:
+      operationId: awardCertification
+      tags: [Moderation]
+      summary: Award a manual certification
+      description: Awards a certification badge to a published software item. Moderator/Admin only.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [softwareId, type]
+              properties:
+                softwareId:
+                  type: string
+                  description: Software document ID.
+                type:
+                  type: string
+                  enum: [verified, security_checked, editors_choice]
+                  description: Certification type to award.
+                reason:
+                  type: string
+                  description: Optional reason for the certification.
+      responses:
+        '201':
+          description: Certification awarded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CertificationResponse'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '409':
+          description: Certification already active
+
+    delete:
+      operationId: revokeCertification
+      tags: [Moderation]
+      summary: Revoke a certification
+      description: Revokes an active certification. Moderator/Admin only.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: certificationId
+          in: query
+          required: true
+          description: Certification document ID to revoke.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Certification revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                        enum: [revoked]
+        '404':
+          description: Certification not found

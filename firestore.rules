@@ -120,6 +120,16 @@ service cloud.firestore {
       allow write: if false; // Only via API
     }
 
+    match /api_keys/{id} {
+      allow read: if signedIn() && resource.data.ownerId == request.auth.uid;
+      allow write: if false; // Only via API
+    }
+
+    match /software_certifications/{id} {
+      allow read: if true; // Publicly viewable
+      allow write: if isModerator(); // Moderators can award/revoke certifications
+    }
+
     match /{serverOnlyCollection}/{id} {
       allow read, write: if false;
     }

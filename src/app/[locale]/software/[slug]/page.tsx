@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Code, ExternalLink, Share2, Star } from 'lucide-react';
+import { Award, Code, ExternalLink, Globe, Share2, ShieldCheck, Star } from 'lucide-react';
 import { DownloadButton } from '@/components/software/DownloadButton';
 import { SoftwareDetailTabs } from '@/components/software/SoftwareDetailTabs';
 import { Badge } from '@/components/ui/Badge';
@@ -68,6 +68,37 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
     },
   };
 
+  /** Certification badge display config */
+  const certBadges: Record<string, { icon: React.ReactNode; label: string; className: string }> = {
+    verified: {
+      icon: <ShieldCheck className="h-3.5 w-3.5" />,
+      label: 'Verified',
+      className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    },
+    security_checked: {
+      icon: <ShieldCheck className="h-3.5 w-3.5" />,
+      label: 'Security Checked',
+      className: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
+    },
+    editors_choice: {
+      icon: <Award className="h-3.5 w-3.5" />,
+      label: "Editor's Choice",
+      className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+    },
+    open_source_verified: {
+      icon: <Globe className="h-3.5 w-3.5" />,
+      label: 'Open Source Verified',
+      className: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+    },
+    community_recommended: {
+      icon: <Star className="h-3.5 w-3.5" />,
+      label: 'Community Recommended',
+      className: 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300',
+    },
+  };
+
+  const activeCerts = software.certifications || [];
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(0,120,255,0.16),transparent_34rem)] px-4 py-10 sm:px-6 lg:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
@@ -89,6 +120,24 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
                   <Badge variant="success">{t('status.published')}</Badge>
                 </div>
                 <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">{software.name}</h1>
+                {/* Certification Badges */}
+                {activeCerts.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {activeCerts.map((cert) => {
+                      const config = certBadges[cert];
+                      if (!config) return null;
+                      return (
+                        <span
+                          key={cert}
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${config.className}`}
+                        >
+                          {config.icon}
+                          {config.label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
                 <p className="mt-2 text-lg text-text-secondary">{t('detail.byDeveloper', { name: software.developerName })}</p>
                 <p className="mt-5 max-w-3xl text-lg leading-8 text-text-secondary">{software.shortDescription}</p>
                 <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-text-secondary">
@@ -154,6 +203,26 @@ export default async function SoftwareDetailPage({ params }: SoftwareDetailPageP
                 <dt className="font-semibold text-text-secondary">{t('detail.fileSize')}</dt>
                 <dd className="mt-1 text-text-primary">{software.fileSize ?? t('detail.notProvided')}</dd>
               </div>
+              {activeCerts.length > 0 && (
+                <div>
+                  <dt className="font-semibold text-text-secondary">Certifications</dt>
+                  <dd className="mt-2 flex flex-wrap gap-1.5">
+                    {activeCerts.map((cert) => {
+                      const config = certBadges[cert];
+                      if (!config) return null;
+                      return (
+                        <span
+                          key={cert}
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${config.className}`}
+                        >
+                          {config.icon}
+                          {config.label}
+                        </span>
+                      );
+                    })}
+                  </dd>
+                </div>
+              )}
             </dl>
           </aside>
         </section>

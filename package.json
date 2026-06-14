@@ -34,9 +34,11 @@
     "rehype-slug": "^6.0.0",
     "shiki": "^4.2.0",
     "typesense": "^3.0.6",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@firebase/rules-unit-testing": "^4.0.1",
     "@tailwindcss/postcss": "^4",
     "@playwright/test": "^1.51.1",

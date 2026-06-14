@@ -26,6 +26,8 @@ export interface SoftwareItem {
   ratingAverage: number;
   ratingCount: number;
   downloadCount: number;
+  certifications?: string[];
+  license?: string;
   publishedAt?: string;
   updatedAt?: string;
   rejectionReason?: string;
