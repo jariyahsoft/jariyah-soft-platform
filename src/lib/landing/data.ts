@@ -3,8 +3,8 @@ import 'server-only';
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import { adminDb } from '@/lib/firebase/admin';
-import { listPublishedSoftware } from '@/lib/software/data';
-import { listPublishedArticles } from '@/lib/articles/data';
+import { listPublishedSoftware, sampleSoftware } from '@/lib/software/data';
+import { listPublishedArticles, sampleArticles } from '@/lib/articles/data';
 import { SoftwareItem } from '@/lib/software/types';
 import { ArticleItem } from '@/lib/articles/types';
 
@@ -26,8 +26,25 @@ function toNumber(value: unknown) {
   return 0;
 }
 
+function isProductionBuildPhase() {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
+function getSampleLandingStats(): LandingStats {
+  return {
+    softwareCount: sampleSoftware.length,
+    developerCount: new Set(sampleSoftware.map((item) => item.ownerId).filter(Boolean)).size,
+    articleCount: sampleArticles.length,
+    downloadCount: sampleSoftware.reduce((sum, item) => sum + item.downloadCount, 0),
+  };
+}
+
 const fetchLandingStatsCached = unstable_cache(
   async (): Promise<LandingStats> => {
+    if (isProductionBuildPhase()) {
+      return getSampleLandingStats();
+    }
+
     try {
       const [softwareSnap, articleSnap, usersSnap, downloadsSnap] = await Promise.all([
         adminDb.collection('software').where('status', '==', 'published').count().get(),
@@ -67,6 +84,14 @@ const fetchLandingStatsCached = unstable_cache(
 export const getLandingStats = cache(fetchLandingStatsCached);
 
 export const getLandingData = cache(async (): Promise<LandingData> => {
+  if (isProductionBuildPhase()) {
+    return {
+      stats: getSampleLandingStats(),
+      trendingSoftware: sampleSoftware.slice(0, 10),
+      recentArticles: sampleArticles.slice(0, 6),
+    };
+  }
+
   const [stats, software, articles] = await Promise.all([
     getLandingStats(),
     listPublishedSoftware({ sort: 'popularity', limit: 10 }),

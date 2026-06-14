@@ -18,7 +18,7 @@ interface ListSoftwareOptions {
 
 const now = new Date().toISOString();
 
-const sampleSoftware: SoftwareItem[] = [
+export const sampleSoftware: SoftwareItem[] = [
   {
     id: 'sample-prompt-studio',
     ownerId: 'sample-dev',

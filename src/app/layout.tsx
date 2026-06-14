@@ -1,13 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin', 'thai' as any],
-});
-
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jariyah.dev'),
   title: {
     default: 'จริยะซอฟต์ — แพลตฟอร์มซอฟต์แวร์ไทย',
     template: '%s | จริยะซอฟต์',
@@ -29,7 +24,7 @@ export default function RootLayout({
   // Default lang="th" (Thai); actual per-locale lang is controlled
   // via the [locale] segment and hreflang in generateMetadata.
   return (
-    <html lang="th" className={`${inter.variable} h-full antialiased`}>
+    <html lang="th" className="h-full antialiased">
       <head>
         <script
           dangerouslySetInnerHTML={{

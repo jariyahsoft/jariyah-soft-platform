@@ -19,7 +19,7 @@ interface ListArticlesOptions {
 
 const now = new Date().toISOString();
 
-const sampleArticles: ArticleItem[] = [
+export const sampleArticles: ArticleItem[] = [
   {
     id: 'sample-getting-started-digital-citizen',
     authorId: 'sample-dev',
